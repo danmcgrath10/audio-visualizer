@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Visualizer Studio - Professional Audio Visualization</title>
+    <meta name="description" content="Professional-grade audio visualizer with real-time frequency analysis, multiple visualization modes, and high-quality video export capabilities.">
+    <style>
+        :root {
+            --bg-primary: #0a0f1c;
+            --bg-secondary: #1a1f2e;
+            --bg-tertiary: #15202b;
+            --bg-card: rgba(26, 31, 46, 0.8);
+            --accent-primary: #7aa2f7;
+            --accent-secondary: #bb9af7;
+            --accent-success: #9ece6a;
+            --accent-warning: #e0af68;
+            --accent-error: #f7768e;
+            --text-primary: #e6edf3;
+            --text-secondary: #a9b1d6;
+            --text-muted: #565f89;
+            --border-primary: rgba(255, 255, 255, 0.12);
+            --border-secondary: rgba(255, 255, 255, 0.06);
+            --shadow-primary: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --shadow-secondary: 0 8px 24px rgba(0, 0, 0, 0.25);
+            --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --gradient-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --gradient-bg: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', system-ui, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .app-header {
+            background: rgba(10, 15, 28, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-secondary);
+            padding: 20px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-secondary);
+        }
+
+        .brand-info h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+
+        .brand-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Button System */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-secondary);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.primary {
+            background: var(--gradient-primary);
+            border: 1px solid transparent;
+            color: white;
+            box-shadow: var(--shadow-inset);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(122, 162, 247, 0.35);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, var(--accent-success), #7dcfb6);
+            border: 1px solid transparent;
+            color: white;
+        }
+
+        .btn.warning {
+            background: linear-gradient(135deg, var(--accent-warning), #ff9e64);
+            border: 1px solid transparent;
+            color: white;
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, var(--accent-error), #ff757f);
+            border: 1px solid transparent;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .visualizer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .visualizer-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0.6;
+        }
+
+        #visualizer {
+            width: 100%;
+            height: 500px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-secondary);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .recording-mode #visualizer {
+            width: 360px;
+            height: 640px;
+            margin: 0 auto;
+            border-color: var(--accent-error);
+            box-shadow: 0 0 20px rgba(247, 118, 142, 0.3);
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .control-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-secondary);
+        }
+
+        .control-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-card h3::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* Scene Selection */
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
+        .scene-btn {
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scene-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-primary);
+            color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+
+        .scene-btn.active {
+            background: linear-gradient(135deg, rgba(122, 162, 247, 0.2), rgba(187, 154, 247, 0.2));
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: 0 0 0 1px rgba(122, 162, 247, 0.3);
+        }
+
+        .scene-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: linear-gradient(135deg, rgba(122, 162, 247, 0.1), rgba(187, 154, 247, 0.1));
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border-secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--accent-primary);
+            background: rgba(122, 162, 247, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .drop-zone-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drop-zone-icon {
+            font-size: 32px;
+            opacity: 0.7;
+        }
+
+        .drop-zone-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .drop-zone-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Status and Progress */
+        .status-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .status-indicator.active {
+            background: var(--accent-success);
+            box-shadow: 0 0 12px rgba(158, 206, 106, 0.5);
+        }
+
+        .status-indicator.active::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid rgba(158, 206, 106, 0.3);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .playback-controls, .video-controls {
+            display: none;
+            gap: 8px;
+        }
+
+        .playback-controls.active, .video-controls.active {
+            display: flex;
+        }
+
+        .progress-container {
+            display: none;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .recording-status {
+            display: none;
+            padding: 16px;
+            background: rgba(158, 206, 106, 0.1);
+            border: 1px solid rgba(158, 206, 106, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--accent-success);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .recording-status.active {
+            display: block;
+        }
+
+        .recording-status.success {
+            background: rgba(122, 162, 247, 0.1);
+            border-color: rgba(122, 162, 247, 0.3);
+            color: var(--accent-primary);
+        }
+
+        /* Footer */
+        .app-footer {
+            background: rgba(10, 15, 28, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-primary);
+            padding: 20px 32px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            max-width: 400px;
+            box-shadow: var(--shadow-primary);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .notification.error {
+            border-color: var(--accent-error);
+            background: rgba(247, 118, 142, 0.1);
+            color: var(--accent-error);
+        }
+
+        .notification.success {
+            border-color: var(--accent-success);
+            background: rgba(158, 206, 106, 0.1);
+            color: var(--accent-success);
+        }
+
+        .notification.warning {
+            border-color: var(--accent-warning);
+            background: rgba(224, 175, 104, 0.1);
+            color: var(--accent-warning);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Keyboard Shortcuts */
+        .shortcuts-hint {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            backdrop-filter: blur(10px);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .shortcuts-hint:hover {
+            opacity: 1;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            pointer-events: none;
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 24px;
+                gap: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .brand {
+                justify-content: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 16px 20px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .control-card {
+                padding: 20px;
+            }
+
+            .scene-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            #visualizer {
+                height: 350px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .brand-info h1 {
+                font-size: 20px;
+            }
+
+            .shortcuts-hint {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .app-header {
+                padding: 12px 16px;
+            }
+
+            .control-card {
+                padding: 16px;
+            }
+
+            .scene-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .scene-btn {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+        }
+
+        /* File Input */
+        input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Drag and Drop Overlay */
+        .drag-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(122, 162, 247, 0.1);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            border: 4px dashed var(--accent-primary);
+        }
+
+        .drag-overlay.active {
+            display: flex;
+        }
+
+        .drag-message {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: var(--radius-xl);
+            padding: 48px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .drag-message::before {
+            content: '📁';
+            display: block;
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        /* Advanced Controls Styling */
+        .audio-settings, .export-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .setting-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .setting-select:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-primary);
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
+        }
+
+        .setting-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .setting-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(122, 162, 247, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .setting-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(122, 162, 247, 0.5);
+        }
+
+        .setting-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(122, 162, 247, 0.3);
+        }
+
+        .setting-value {
+            font-size: 12px;
+            color: var(--accent-primary);
+            font-weight: 600;
+            text-align: center;
+            padding: 4px 8px;
+            background: rgba(122, 162, 247, 0.1);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(122, 162, 247, 0.2);
+        }
+
+        /* Theme Selection */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .theme-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-primary);
+            color: var(--text-secondary);
+        }
+
+        .theme-btn.active {
+            background: rgba(122, 162, 247, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .theme-preview {
+            width: 40px;
+            height: 20px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-preview.neon {
+            background: linear-gradient(90deg, #7aa2f7, #bb9af7, #7dcfb6);
+        }
+
+        .theme-preview.ocean {
+            background: linear-gradient(90deg, #4facfe, #00f2fe, #43e97b);
+        }
+
+        .theme-preview.sunset {
+            background: linear-gradient(90deg, #fa709a, #fee140, #ffa726);
+        }
+
+        .theme-preview.forest {
+            background: linear-gradient(90deg, #11998e, #38ef7d, #a8e6cf);
+        }
+
+        .theme-preview.cyberpunk {
+            background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe);
+        }
+
+        .theme-preview.monochrome {
+            background: linear-gradient(90deg, #ffffff, #9ca3af, #374151);
+        }
+
+        /* Analysis Panel */
+        .analysis-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .analysis-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .analysis-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .analysis-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        .frequency-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .freq-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .freq-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .freq-meter {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .freq-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: width 0.1s ease;
+            width: 0%;
+        }
+
+        .freq-fill.bass {
+            background: linear-gradient(90deg, #f7768e, #ff9e64);
+        }
+
+        .freq-fill.mid {
+            background: linear-gradient(90deg, #7aa2f7, #bb9af7);
+        }
+
+        .freq-fill.high {
+            background: linear-gradient(90deg, #9ece6a, #7dcfb6);
+        }
+
+        /* Preset Controls */
+        .preset-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-buttons .btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* Shortcuts List */
+        .shortcuts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+        }
+
+        .shortcut-item kbd {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-secondary);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            min-width: 32px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .shortcut-item span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile adjustments for new controls */
+        @media (max-width: 768px) {
+            .theme-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .preset-buttons {
+                flex-direction: column;
+            }
+
+            .analysis-row {
+                padding: 6px 8px;
+            }
+
+            .freq-bar {
+                gap: 8px;
+            }
+
+            .freq-label {
+                min-width: 25px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <div class="brand-icon">🎵</div>
+                    <div class="brand-info">
+                        <h1>Audio Visualizer Studio</h1>
+                        <p>Professional Real-Time Audio Visualization</p>
+                    </div>
+                </div>
+                
+                <div class="header-controls">
+                    <div class="btn-group">
+                        <button class="btn primary" id="loadBtn">
+                            📁 Load Audio
+                        </button>
+                        <button class="btn" id="micBtn">
+                            🎤 Microphone
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="visualizer-section">
+                <div class="visualizer-container">
+                    <canvas id="visualizer" aria-label="Audio visualization display"></canvas>
+                </div>
+
+                <div class="status-section">
+                    <div class="status-info">
+                        <div class="status-indicator" id="statusDot"></div>
+                        <div class="status-text" id="statusText">Ready - Load an audio file or use microphone to begin</div>
+                    </div>
+
+                    <div class="playback-controls" id="playbackControls">
+                        <button class="btn primary" id="playPauseBtn">▶️ Play</button>
+                        <button class="btn" id="restartBtn">🔄 Restart</button>
+                        <button class="btn danger" id="stopBtn">⏹️ Stop</button>
+                    </div>
+
+                    <div class="video-controls" id="videoControls">
+                        <button class="btn success" id="downloadVideoBtn">🎬 Create Video</button>
+                        <button class="btn primary hidden" id="downloadCompleteBtn">📥 Download Video</button>
+                        <button class="btn" id="newVideoBtn" style="display: none;">🎬 New Video</button>
+                    </div>
+
+                    <div class="recording-status" id="recordingStatus"></div>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressBar"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Preparing...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <aside class="control-panel">
+                <div class="control-card">
+                    <h3>🎵 Audio Source</h3>
+                    <div class="audio-controls">
+                        <div class="drop-zone" id="dropZone">
+                            <div class="drop-zone-content">
+                                <div class="drop-zone-icon">📁</div>
+                                <div class="drop-zone-text">Drop audio file here</div>
+                                <div class="drop-zone-hint">Supports MP3, WAV, M4A, FLAC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>🎨 Visualization Style</h3>
+                    <div class="scene-grid">
+                        <button class="scene-btn active" data-scene="bars">Bars</button>
+                        <button class="scene-btn" data-scene="radial">Radial</button>
+                        <button class="scene-btn" data-scene="waveform">Wave</button>
+                        <button class="scene-btn" data-scene="particles">Particles</button>
+                        <button class="scene-btn" data-scene="spiral">Spiral</button>
+                        <button class="scene-btn" data-scene="rings">Rings</button>
+                        <button class="scene-btn" data-scene="tunnel">Tunnel</button>
+                        <button class="scene-btn" data-scene="galaxy">Galaxy</button>
+                        <button class="scene-btn" data-scene="space">🌌 Space</button>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>🎛️ Audio Settings</h3>
+                    <div class="audio-settings">
+                        <div class="setting-group">
+                            <label class="setting-label">FFT Size</label>
+                            <select class="setting-select" id="fftSize">
+                                <option value="256">256</option>
+                                <option value="512" selected>512</option>
+                                <option value="1024">1024</option>
+                                <option value="2048">2048</option>
+                                <option value="4096">4096</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Smoothing</label>
+                            <input type="range" class="setting-slider" id="smoothing" min="0" max="0.95" step="0.05" value="0.6">
+                            <span class="setting-value" id="smoothingValue">0.6</span>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Sensitivity</label>
+                            <input type="range" class="setting-slider" id="sensitivity" min="0.5" max="3" step="0.1" value="1">
+                            <span class="setting-value" id="sensitivityValue">1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>🎨 Color Themes</h3>
+                    <div class="theme-grid">
+                        <button class="theme-btn active" data-theme="neon">
+                            <div class="theme-preview neon"></div>
+                            <span>Neon</span>
+                        </button>
+                        <button class="theme-btn" data-theme="ocean">
+                            <div class="theme-preview ocean"></div>
+                            <span>Ocean</span>
+                        </button>
+                        <button class="theme-btn" data-theme="sunset">
+                            <div class="theme-preview sunset"></div>
+                            <span>Sunset</span>
+                        </button>
+                        <button class="theme-btn" data-theme="forest">
+                            <div class="theme-preview forest"></div>
+                            <span>Forest</span>
+                        </button>
+                        <button class="theme-btn" data-theme="cyberpunk">
+                            <div class="theme-preview cyberpunk"></div>
+                            <span>Cyber</span>
+                        </button>
+                        <button class="theme-btn" data-theme="monochrome">
+                            <div class="theme-preview monochrome"></div>
+                            <span>Mono</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>📊 Audio Analysis</h3>
+                    <div class="analysis-panel">
+                        <div class="analysis-row">
+                            <span class="analysis-label">BPM</span>
+                            <span class="analysis-value" id="bpmValue">--</span>
+                        </div>
+                        <div class="analysis-row">
+                            <span class="analysis-label">Key</span>
+                            <span class="analysis-value" id="keyValue">--</span>
+                        </div>
+                        <div class="frequency-bars">
+                            <div class="freq-bar">
+                                <div class="freq-label">Bass</div>
+                                <div class="freq-meter"><div class="freq-fill" id="bassLevel"></div></div>
+                            </div>
+                            <div class="freq-bar">
+                                <div class="freq-label">Mid</div>
+                                <div class="freq-meter"><div class="freq-fill" id="midLevel"></div></div>
+                            </div>
+                            <div class="freq-bar">
+                                <div class="freq-label">High</div>
+                                <div class="freq-meter"><div class="freq-fill" id="highLevel"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>📹 Export Settings</h3>
+                    <div class="export-settings">
+                        <div class="setting-group">
+                            <label class="setting-label">Resolution</label>
+                            <select class="setting-select" id="videoResolution">
+                                <option value="360x640">360×640 (9:16)</option>
+                                <option value="720x1280">720×1280 (9:16 HD)</option>
+                                <option value="1080x1920" selected>1080×1920 (9:16 FHD)</option>
+                                <option value="1920x1080">1920×1080 (16:9 FHD)</option>
+                                <option value="1280x720">1280×720 (16:9 HD)</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Quality</label>
+                            <select class="setting-select" id="videoQuality">
+                                <option value="low">Low (Faster)</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High (Better)</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Frame Rate</label>
+                            <select class="setting-select" id="frameRate">
+                                <option value="24">24 FPS</option>
+                                <option value="30" selected>30 FPS</option>
+                                <option value="60">60 FPS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>💾 Presets</h3>
+                    <div class="preset-controls">
+                        <select class="setting-select" id="presetSelect">
+                            <option value="">Select Preset...</option>
+                            <option value="social-media">Social Media</option>
+                            <option value="music-video">Music Video</option>
+                            <option value="podcast">Podcast</option>
+                            <option value="gaming">Gaming</option>
+                        </select>
+                        <div class="preset-buttons">
+                            <button class="btn" id="savePreset">💾 Save</button>
+                            <button class="btn" id="loadPreset">📂 Load</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h3>ℹ️ Shortcuts</h3>
+                    <div class="shortcuts-list">
+                        <div class="shortcut-item">
+                            <kbd>Space</kbd> <span>Play/Pause</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>R</kbd> <span>Restart</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>V</kbd> <span>Create Video</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>1-9</kbd> <span>Switch Scenes</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <span>Audio Visualizer Studio v2.0</span>
+                    <span>•</span>
+                    <span>Web Audio API</span>
+                    <span>•</span>
+                    <span>Real-time Processing</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">
+                    Professional-grade audio visualization technology
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notification hidden" id="errorContainer">
+        <div id="errorText"></div>
+    </div>
+
+    <!-- Drag & Drop Overlay -->
+    <div class="drag-overlay" id="dragOverlay">
+        <div class="drag-message">
+            Drop your audio file here
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Hint -->
+    <div class="shortcuts-hint">
+        Press <strong>?</strong> for keyboard shortcuts
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="fileInput" accept="audio/*" aria-label="Choose audio file">
+
+    <script src="visualizer.js"></script>
+</body>
+</html>
