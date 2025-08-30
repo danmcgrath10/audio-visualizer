@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Visualizer Studio - Professional Audio Visualization</title>
-    <meta name="description" content="Professional-grade audio visualizer with real-time frequency analysis, multiple visualization modes, and high-quality video export capabilities.">
+    <title>EarGoo - Professional Audio Visualization</title>
+    <meta name="description" content="EarGoo - Professional-grade audio visualizer with real-time frequency analysis, multiple visualization modes, and high-quality video export capabilities.">
     <style>
         :root {
             --bg-primary: #0a0f1c;
@@ -48,9 +48,9 @@
         }
 
         .app-container {
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
             position: relative;
         }
 
@@ -208,22 +208,21 @@
 
         /* Main Content */
         .main-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px;
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 32px;
-            align-items: start;
+            flex: 1;
+            display: flex;
+            overflow: hidden;
         }
 
         .visualizer-section {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            padding: 24px;
+            min-width: 0;
         }
 
         .visualizer-container {
+            flex: 1;
             background: var(--bg-card);
             border: 1px solid var(--border-primary);
             border-radius: var(--radius-xl);
@@ -232,6 +231,8 @@
             box-shadow: var(--shadow-primary);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .visualizer-container::before {
@@ -246,8 +247,9 @@
         }
 
         #visualizer {
+            flex: 1;
             width: 100%;
-            height: 500px;
+            min-height: 400px;
             border-radius: var(--radius-lg);
             background: var(--bg-primary);
             border: 1px solid var(--border-secondary);
@@ -264,9 +266,70 @@
 
         /* Control Panel */
         .control-panel {
+            width: 320px;
+            min-width: 320px;
+            max-width: 600px;
+            background: var(--bg-card);
+            border-left: 2px solid var(--border-primary);
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            overflow: hidden;
+            position: relative;
+            resize: horizontal;
+        }
+
+        .control-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -4px;
+            width: 8px;
+            height: 100%;
+            background: transparent;
+            cursor: col-resize;
+            z-index: 10;
+        }
+
+        .control-panel:hover::after {
+            background: var(--accent-primary);
+            opacity: 0.2;
+        }
+
+        .control-panel.resizing::after {
+            background: var(--accent-primary);
+            opacity: 0.5;
+        }
+
+        .control-panel-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border-secondary);
+            background: var(--bg-card);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .resize-indicator {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.6;
+            cursor: col-resize;
+            user-select: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .resize-indicator:hover {
+            opacity: 1;
+            color: var(--accent-primary);
+        }
+
+        .control-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px 24px;
         }
 
         .control-card {
@@ -396,6 +459,51 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            margin-top: 16px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: inline-flex;
+            }
+
+            .control-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                transform: translateY(100%);
+                transition: transform 0.3s ease;
+                max-height: 70vh;
+                border-top: 1px solid var(--border-primary);
+                resize: none;
+                width: 100% !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .control-panel::after {
+                display: none;
+            }
+
+            .resize-indicator {
+                display: none;
+            }
+
+            .control-panel.active {
+                transform: translateY(0);
+            }
         }
 
         .status-info {
@@ -659,9 +767,7 @@
         /* Mobile Responsive */
         @media (max-width: 1024px) {
             .main-content {
-                grid-template-columns: 1fr;
-                padding: 24px;
-                gap: 24px;
+                flex-direction: column;
             }
 
             .header-content {
@@ -678,6 +784,13 @@
                 flex-direction: column;
                 gap: 12px;
             }
+
+            .control-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--border-primary);
+                max-height: 40vh;
+            }
         }
 
         @media (max-width: 768px) {
@@ -686,11 +799,30 @@
             }
 
             .main-content {
-                padding: 20px;
+                flex-direction: column;
+            }
+
+            .visualizer-section {
+                padding: 16px;
+                min-height: 60vh;
+            }
+
+            .control-panel {
+                width: 100%;
+                border-left: none;
+            }
+
+            .control-panel-header {
+                padding: 16px 20px 12px;
+            }
+
+            .control-panel-content {
+                padding: 12px 20px 20px;
             }
 
             .control-card {
-                padding: 20px;
+                padding: 16px;
+                margin-bottom: 16px;
             }
 
             .scene-grid {
@@ -698,7 +830,7 @@
             }
 
             #visualizer {
-                height: 350px;
+                min-height: 300px;
             }
 
             .btn-group {
@@ -1082,6 +1214,596 @@
             color: var(--text-secondary);
         }
 
+        /* User Section */
+        .user-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            max-width: 280px;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-primary);
+            transform: translateY(-1px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 8px 0;
+            min-width: 200px;
+            box-shadow: var(--shadow-primary);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-secondary);
+            margin: 8px 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Authentication Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: 0;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-primary);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 24px 0;
+            border-bottom: 1px solid var(--border-secondary);
+            margin-bottom: 24px;
+        }
+
+        .auth-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .auth-form {
+            padding: 0 24px 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .link-btn:hover {
+            color: var(--accent-secondary);
+        }
+
+        .btn.full-width {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-secondary);
+        }
+
+        .auth-divider span {
+            padding: 0 16px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            color: #333;
+            border: 1px solid var(--border-secondary);
+            font-weight: 500;
+        }
+
+        .google-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-1px);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Monetization UI */
+        .user-tier {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .tier-badge {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            min-width: fit-content;
+        }
+
+        .tier-badge.free {
+            background: rgba(224, 175, 104, 0.08);
+            color: var(--accent-warning);
+            border: 1px solid rgba(224, 175, 104, 0.2);
+        }
+
+        .tier-badge.free::before {
+            content: '⭐';
+            font-size: 8px;
+        }
+
+        .tier-badge.pro {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+        }
+
+        .tier-badge.pro::before {
+            content: '👑';
+            font-size: 8px;
+        }
+
+        .tier-restriction {
+            background: rgba(224, 175, 104, 0.05);
+            border: 1px solid rgba(224, 175, 104, 0.2);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .restriction-notice {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--accent-warning);
+        }
+
+        .restriction-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .restriction-icon {
+            font-size: 14px;
+        }
+
+        .restriction-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .restriction-text strong {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .restriction-detail {
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        .btn.small {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        .pro-tier-only .tier-restriction {
+            display: none;
+        }
+
+        /* MIDI Controls */
+        .midi-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .midi-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .midi-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .midi-indicator.connected {
+            background: var(--accent-success);
+            box-shadow: 0 0 8px rgba(158, 206, 106, 0.5);
+        }
+
+        .midi-mappings {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mapping-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .mapping-item kbd {
+            background: rgba(122, 162, 247, 0.1);
+            border: 1px solid rgba(122, 162, 247, 0.3);
+            color: var(--accent-primary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        /* Waveform Controls */
+        .waveform-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .range-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .range-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .range-item .setting-slider {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .range-item .setting-value {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Watermark Overlay */
+        .watermark {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .watermark.recording {
+            background: rgba(224, 175, 104, 0.9);
+            color: white;
+            animation: pulse-watermark 2s infinite;
+        }
+
+        @keyframes pulse-watermark {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Upgrade Modal */
+        .upgrade-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .upgrade-modal.active {
+            display: flex;
+        }
+
+        .upgrade-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: var(--shadow-primary);
+        }
+
+        .upgrade-content h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upgrade-features {
+            list-style: none;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        .upgrade-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .upgrade-features li::before {
+            content: '✅';
+            font-size: 16px;
+        }
+
+        .pricing {
+            background: rgba(122, 162, 247, 0.1);
+            border: 1px solid rgba(122, 162, 247, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
         /* Mobile adjustments for new controls */
         @media (max-width: 768px) {
             .theme-grid {
@@ -1104,6 +1826,46 @@
                 min-width: 25px;
                 font-size: 10px;
             }
+
+            .user-tier {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+
+            .user-info {
+                max-width: 100%;
+                justify-content: center;
+            }
+
+            .tier-badge {
+                font-size: 9px;
+                padding: 3px 6px;
+            }
+
+            .range-group {
+                gap: 8px;
+            }
+
+            .range-item {
+                gap: 8px;
+            }
+
+            .range-item .setting-value {
+                min-width: 50px;
+                font-size: 11px;
+            }
+
+            .restriction-notice {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .upgrade-content {
+                margin: 20px;
+                padding: 24px;
+            }
         }
     </style>
 </head>
@@ -1115,18 +1877,52 @@
                 <div class="brand">
                     <div class="brand-icon">🎵</div>
                     <div class="brand-info">
-                        <h1>Audio Visualizer Studio</h1>
+                        <h1>EarGoo</h1>
                         <p>Professional Real-Time Audio Visualization</p>
                     </div>
                 </div>
                 
                 <div class="header-controls">
+                    <div class="user-section">
+                        <div class="user-info" id="userInfo" style="display: none;">
+                            <div class="user-avatar" id="userAvatar">
+                                <span id="userInitials">U</span>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name" id="userName">User</div>
+                                <div class="user-tier">
+                                    <span class="tier-badge free" id="tierBadge">FREE TIER</span>
+                                </div>
+                            </div>
+                            <div class="user-menu">
+                                <button class="btn" id="userMenuBtn">▼</button>
+                                <div class="dropdown-menu" id="userDropdown">
+                                    <button class="dropdown-item" id="profileBtn">👤 Profile</button>
+                                    <button class="dropdown-item" id="projectsBtn">📁 My Projects</button>
+                                    <button class="dropdown-item" id="settingsBtn">⚙️ Settings</button>
+                                    <button class="dropdown-item" id="upgradeBtn">⭐ Upgrade to Pro</button>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item" id="logoutBtn">🚪 Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auth-buttons" id="authButtons">
+                            <button class="btn" id="loginBtn">Login</button>
+                            <button class="btn primary" id="signupBtn">Sign Up</button>
+                        </div>
+                    </div>
                     <div class="btn-group">
                         <button class="btn primary" id="loadBtn">
                             📁 Load Audio
                         </button>
                         <button class="btn" id="micBtn">
                             🎤 Microphone
+                        </button>
+                        <button class="btn" id="midiBtn">
+                            🎹 MIDI Setup
+                        </button>
+                        <button class="btn mobile-only" id="toggleControlsBtn">
+                            ⚙️ Controls
                         </button>
                     </div>
                 </div>
@@ -1136,9 +1932,10 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="visualizer-section">
-                <div class="visualizer-container">
-                    <canvas id="visualizer" aria-label="Audio visualization display"></canvas>
-                </div>
+                        <div class="visualizer-container">
+            <canvas id="visualizer" aria-label="Audio visualization display"></canvas>
+                            <div class="watermark" id="watermark">EarGoo - Free Tier</div>
+        </div>
 
                 <div class="status-section">
                     <div class="status-info">
@@ -1146,16 +1943,18 @@
                         <div class="status-text" id="statusText">Ready - Load an audio file or use microphone to begin</div>
                     </div>
 
-                    <div class="playback-controls" id="playbackControls">
-                        <button class="btn primary" id="playPauseBtn">▶️ Play</button>
-                        <button class="btn" id="restartBtn">🔄 Restart</button>
-                        <button class="btn danger" id="stopBtn">⏹️ Stop</button>
-                    </div>
+                    <div class="control-buttons">
+                        <div class="playback-controls" id="playbackControls">
+                            <button class="btn primary" id="playPauseBtn">▶️ Play</button>
+                            <button class="btn" id="restartBtn">🔄 Restart</button>
+                            <button class="btn danger" id="stopBtn">⏹️ Stop</button>
+                        </div>
 
-                    <div class="video-controls" id="videoControls">
-                        <button class="btn success" id="downloadVideoBtn">🎬 Create Video</button>
-                        <button class="btn primary hidden" id="downloadCompleteBtn">📥 Download Video</button>
-                        <button class="btn" id="newVideoBtn" style="display: none;">🎬 New Video</button>
+                        <div class="video-controls" id="videoControls">
+                            <button class="btn success" id="downloadVideoBtn">🎬 Create Video</button>
+                            <button class="btn primary hidden" id="downloadCompleteBtn">📥 Download Video</button>
+                            <button class="btn" id="newVideoBtn" style="display: none;">🎬 New Video</button>
+                        </div>
                     </div>
 
                     <div class="recording-status" id="recordingStatus"></div>
@@ -1171,8 +1970,16 @@
 
             <!-- Control Panel -->
             <aside class="control-panel">
-                <div class="control-card">
-                    <h3>🎵 Audio Source</h3>
+                <div class="control-panel-header">
+                    <div>
+                        <h3>🎛️ Controls</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Adjust settings and customize your visualization</p>
+                    </div>
+                    <div class="resize-indicator" title="Drag to resize panel">⋮⋮</div>
+                </div>
+                <div class="control-panel-content">
+                    <div class="control-card">
+                        <h3>🎵 Audio Source</h3>
                     <div class="audio-controls">
                         <div class="drop-zone" id="dropZone">
                             <div class="drop-zone-content">
@@ -1284,15 +2091,95 @@
                 </div>
 
                 <div class="control-card">
+                    <h3>📈 Advanced Waveform</h3>
+                    <div class="waveform-controls">
+                        <div class="setting-group">
+                            <label class="setting-label">Analysis Type</label>
+                            <select class="setting-select" id="waveformType">
+                                <option value="amplitude">Amplitude</option>
+                                <option value="spectral" selected>Spectral</option>
+                                <option value="phase">Phase</option>
+                                <option value="harmonic">Harmonic</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Window Function</label>
+                            <select class="setting-select" id="windowFunction">
+                                <option value="hanning" selected>Hanning</option>
+                                <option value="hamming">Hamming</option>
+                                <option value="blackman">Blackman</option>
+                                <option value="bartlett">Bartlett</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Frequency Range</label>
+                            <div class="range-group">
+                                <div class="range-item">
+                                    <span class="setting-label" style="font-size: 11px; min-width: 40px;">Min:</span>
+                                    <input type="range" class="setting-slider" id="freqMin" min="20" max="1000" value="20">
+                                    <span class="setting-value" id="freqMinValue">20Hz</span>
+                                </div>
+                                <div class="range-item">
+                                    <span class="setting-label" style="font-size: 11px; min-width: 40px;">Max:</span>
+                                    <input type="range" class="setting-slider" id="freqMax" min="1000" max="20000" value="20000">
+                                    <span class="setting-value" id="freqMaxValue">20kHz</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card" data-card="midi">
+                    <h3>🎹 MIDI Control</h3>
+                    <div class="midi-controls">
+                        <div class="midi-status">
+                            <div class="midi-indicator" id="midiIndicator"></div>
+                            <span id="midiStatus">No MIDI device</span>
+                        </div>
+                        <button class="btn" id="midiScanBtn">🔍 Scan Devices</button>
+                        <div class="midi-mappings" id="midiMappings">
+                            <div class="mapping-item">
+                                <span>Sensitivity</span>
+                                <kbd>CC1</kbd>
+                            </div>
+                            <div class="mapping-item">
+                                <span>Smoothing</span>
+                                <kbd>CC2</kbd>
+                            </div>
+                            <div class="mapping-item">
+                                <span>Scene</span>
+                                <kbd>CC3</kbd>
+                            </div>
+                            <div class="mapping-item">
+                                <span>Theme</span>
+                                <kbd>CC4</kbd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
                     <h3>📹 Export Settings</h3>
                     <div class="export-settings">
+                        <div class="tier-restriction free-tier-only" id="exportTierRestriction">
+                            <div class="restriction-notice">
+                                <div class="restriction-info">
+                                    <span class="restriction-icon">🔒</span>
+                                    <div class="restriction-text">
+                                        <strong>FREE TIER</strong>
+                                        <span class="restriction-detail">Videos include watermark • Limited to 720p • 3 videos/day</span>
+                                    </div>
+                                </div>
+                                <button class="btn primary small" id="upgradeFromExport">Upgrade to Pro</button>
+                            </div>
+                        </div>
                         <div class="setting-group">
                             <label class="setting-label">Resolution</label>
                             <select class="setting-select" id="videoResolution">
                                 <option value="360x640">360×640 (9:16)</option>
                                 <option value="720x1280">720×1280 (9:16 HD)</option>
-                                <option value="1080x1920" selected>1080×1920 (9:16 FHD)</option>
-                                <option value="1920x1080">1920×1080 (16:9 FHD)</option>
+                                <option value="1080x1920" selected>1080×1920 (9:16 FHD) 🔒</option>
+                                <option value="1920x1080">1920×1080 (16:9 FHD) 🔒</option>
                                 <option value="1280x720">1280×720 (16:9 HD)</option>
                             </select>
                         </div>
@@ -1301,7 +2188,7 @@
                             <select class="setting-select" id="videoQuality">
                                 <option value="low">Low (Faster)</option>
                                 <option value="medium" selected>Medium</option>
-                                <option value="high">High (Better)</option>
+                                <option value="high">High (Better) 🔒</option>
                             </select>
                         </div>
                         <div class="setting-group">
@@ -1309,7 +2196,7 @@
                             <select class="setting-select" id="frameRate">
                                 <option value="24">24 FPS</option>
                                 <option value="30" selected>30 FPS</option>
-                                <option value="60">60 FPS</option>
+                                <option value="60">60 FPS 🔒</option>
                             </select>
                         </div>
                     </div>
@@ -1328,6 +2215,7 @@
                         <div class="preset-buttons">
                             <button class="btn" id="savePreset">💾 Save</button>
                             <button class="btn" id="loadPreset">📂 Load</button>
+                            <button class="btn" id="deletePreset">🗑️ Delete</button>
                         </div>
                     </div>
                 </div>
@@ -1349,6 +2237,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </aside>
         </main>
 
@@ -1356,14 +2245,14 @@
         <footer class="app-footer">
             <div class="footer-content">
                 <div class="footer-links">
-                    <span>Audio Visualizer Studio v2.0</span>
+                    <span>EarGoo v2.0</span>
                     <span>•</span>
                     <span>Web Audio API</span>
                     <span>•</span>
                     <span>Real-time Processing</span>
                 </div>
                 <div style="font-size: 12px; color: var(--text-muted);">
-                    Professional-grade audio visualization technology
+                    Professional-grade audio visualization technology by EarGoo
                 </div>
             </div>
         </footer>
@@ -1381,6 +2270,141 @@
         </div>
     </div>
 
+    <!-- Upgrade Modal -->
+    <div class="upgrade-modal" id="upgradeModal">
+        <div class="upgrade-content">
+            <h2>⭐ Upgrade to Pro</h2>
+                            <p>Unlock the full potential of EarGoo</p>
+            
+            <ul class="upgrade-features">
+                <li>Remove watermarks from all videos</li>
+                <li>4K resolution exports (3840×2160)</li>
+                <li>60 FPS high-quality rendering</li>
+                <li>Advanced waveform analysis</li>
+                <li>🎹 MIDI controller support</li>
+                <li>Cloud project storage</li>
+                <li>Batch processing</li>
+                <li>Priority support</li>
+            </ul>
+            
+            <div class="pricing">
+                <div class="price">$9.99</div>
+                <div class="price-period">per month</div>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn primary" id="upgradeToPro">Upgrade Now</button>
+                <button class="btn" id="closeUpgradeModal">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modals -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <div class="auth-header">
+                <h2 id="authTitle">Welcome Back</h2>
+                <button class="close-btn" id="closeAuthModal">×</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <button type="button" class="link-btn" id="forgotPasswordBtn">Forgot password?</button>
+                </div>
+                <button type="submit" class="btn primary full-width">Sign In</button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button type="button" class="btn google-btn" id="googleLoginBtn">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0MSAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDl2NC4yNzQ1NUgxMy44NDM2QzEzLjYzNDEgMTUuMTIwNSAxMi45MjczIDE1LjczNjQgMTIgMTUuNzM2NEMxMC42NTQ1IDE1LjczNjQgOS41NzI3MyAxNC44ODM2IDkuMjA3MjcgMTMuNzQ1NUg1LjA5MDkxVjE2LjU4MzlDOS4yMDcyNyAxOC40MTg2IDEyLjUgMTguNDE4NiAxMiAxOC40MTg2QzE0LjY2ODIgMTguNDE4NiAxNi44NzI3IDE3LjM3NzMgMTcuNjQgMTUuNzM2NFY5LjIwNDU1WiIgZmlsbD0iIzQyODVGQSIvPgo8cGF0aCBkPSJNOSAxOC4wMDAxQzExLjQzMTggMTguMDAwMSAxMy40NjczIDE3LjE5NTUgMTQuOTI3MyAxNS43MzY0TDEyLjgxODEgMTMuNzQ1NUMxMi4yNzI3IDE0LjQ3NzMgMTEuNDMxOCAxNC45MDkxIDEwIDE0LjkwOTFDOC41NzI3MyAxNC45MDkxIDcuNDM2MzYgMTMuNzcyNyA3LjA3MDkxIDEyLjYzNDVIMy4wOTA5MVYxNS40NzI3QzQuNTQ1NDUgMTcuMTk1NSA2LjU2ODE4IDE4LjAwMDEgOSAxOC4wMDAxWiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNy4wNzA5MSAxMi42MzQ1QzYuOTI3MjcgMTIuMjA5MSA2Ljg2MzY0IDExLjc1NDUgNi44NjM2NCAxLjI3MjczQzYuODYzNjQgMTEuNzU0NSA2LjkyNzI3IDEyLjIwOTEgNy4wNzA5MSAxMi42MzQ1WiIgZmlsbD0iI0ZCQkMwNSIvPgo8cGF0aCBkPSJNOSA3LjA5MDkxQzkuOTU0NTUgNy4wOTA5MSAxMC43NzI3IDcuNDU0NTUgMTEuMzYzNiA4LjA5MDkxTDEzLjQ1NDUgNi4wMDAwMUMxMi40NjczIDQuOTU0NTUgMTEuMDQ1NSA0LjI3MjczIDkgNC4yNzI3M0M2LjU2ODE4IDQuMjcyNzMgNC41NDU0NSA1LjA3NzI3IDMuMDkwOTEgNi43OTU0NUw3LjA3MDkxIDkuNjM0NTVDNy40MzYzNiA4LjQ5NjM2IDguNTcyNzMgNy4zNjM2NCA5IDcuMzYzNjRWNy4wOTA5MVoiIGZpbGw9IiNFQTQzMzUiLz4KPC9zdmc+" alt="Google" width="18" height="18">
+                    Continue with Google
+                </button>
+                <div class="auth-switch">
+                    Don't have an account? <button type="button" class="link-btn" id="switchToSignup">Sign up</button>
+                </div>
+            </form>
+            
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required placeholder="••••••••" minlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required placeholder="••••••••" minlength="8">
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span>I agree to the <button type="button" class="link-btn">Terms of Service</button> and <button type="button" class="link-btn">Privacy Policy</button></span>
+                    </label>
+                </div>
+                <button type="submit" class="btn primary full-width">Create Account</button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button type="button" class="btn google-btn" id="googleSignupBtn">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0MSAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDl2NC4yNzQ1NUgxMy44NDM2QzEzLjYzNDEgMTUuMTIwNSAxMi45MjczIDE1LjczNjQgMTIgMTUuNzM2NEMxMC42NTQ1IDE1LjczNjQgOS41NzI3MyAxNC44ODM2IDkuMjA3MjcgMTMuNzQ1NUg1LjA5MDkxVjE2LjU4MzlDOS4yMDcyNyAxOC40MTg2IDEyLjUgMTguNDE4NiAxMiAxOC40MTg2QzE0LjY2ODIgMTguNDE4NiAxNi44NzI3IDE3LjM3NzMgMTcuNjQgMTUuNzM2NFY5LjIwNDU1WiIgZmlsbD0iIzQyODVGQSIvPgo8cGF0aCBkPSJNOSAxOC4wMDAxQzExLjQzMTggMTguMDAwMSAxMy40NjczIDE3LjE5NTUgMTQuOTI3MyAxNS43MzY0TDEyLjgxODEgMTMuNzQ1NUMxMi4yNzI3IDE0LjQ3NzMgMTEuNDMxOCAxNC45MDkxIDEwIDE0LjkwOTFDOC41NzI3MyAxNC45MDkxIDcuNDM2MzYgMTMuNzcyNyA3LjA3MDkxIDEyLjYzNDVIMy4wOTA5MVYxNS40NzI3QzQuNTQ1NDUgMTcuMTk1NSA2LjU2ODE4IDE4LjAwMDEgOSAxOC4wMDAxWiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNNy4wNzA5MSAxMi42MzQ1QzYuOTI3MjcgMTIuMjA5MSA2Ljg2MzY0IDExLjc1NDUgNi44NjM2NCAxLjI3MjczQzYuODYzNjQgMTEuNzU0NSA2LjkyNzI3IDEyLjIwOTEgNy4wNzA5MSAxMi42MzQ1WiIgZmlsbD0iI0ZCQkMwNSIvPgo8cGF0aCBkPSJNOSA3LjA5MDkxQzkuOTU0NTUgNy4wOTA5MSAxMC43NzI3IDcuNDU0NTUgMTEuMzYzNiA4LjA5MDkxTDEzLjQ1NDUgNi4wMDAwMUMxMi40NjczIDQuOTU0NTUgMTEuMDQ1NSAyLjI3MjczIDkgNC4yNzI3M0M2LjU2ODE4IDQuMjcyNzMgNC41NDU0NSA1LjA3NzI3IDMuMDkwOTEgNi43OTU0NUw3LjA3MDkxIDkuNjM0NTVDNy40MzYzNiA4LjQ5NjM2IDguNTcyNzMgNy4zNjM2NCA5IDcuMzYzNjRWNy4wOTA5MVoiIGZpbGw9IiNFQTQzMzUiLz4KPC9zdmc+" alt="Google" width="18" height="18">
+                    Continue with Google
+                </button>
+                <div class="auth-switch">
+                    Already have an account? <button type="button" class="link-btn" id="switchToLogin">Sign in</button>
+                </div>
+            </form>
+            
+            <!-- Forgot Password Form -->
+            <form id="forgotPasswordForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" required placeholder="your@email.com">
+                </div>
+                <button type="submit" class="btn primary full-width">Send Reset Link</button>
+                <div class="auth-switch">
+                    Remember your password? <button type="button" class="link-btn" id="switchToLoginFromReset">Sign in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MIDI Setup Modal -->
+    <div class="upgrade-modal" id="midiModal">
+        <div class="upgrade-content">
+            <h2>🎹 MIDI Controller Setup</h2>
+            <p>Connect your MIDI controller for real-time control</p>
+            
+            <div id="midiDeviceList" style="margin: 20px 0;">
+                <p style="color: var(--text-muted);">Scanning for MIDI devices...</p>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn primary" id="connectMidiDevice">Connect</button>
+                <button class="btn" id="closeMidiModal">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Keyboard Shortcuts Hint -->
     <div class="shortcuts-hint">
         Press <strong>?</strong> for keyboard shortcuts
@@ -1389,6 +2413,9 @@
     <!-- Hidden File Input -->
     <input type="file" id="fileInput" accept="audio/*" aria-label="Choose audio file">
 
+    <script src="env-injector.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
     <script src="visualizer.js"></script>
 </body>
 </html>

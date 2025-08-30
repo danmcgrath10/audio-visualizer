@@ -92,9 +92,38 @@ class AudioVisualizer {
             }
         };
         
+        // Monetization
+        this.userTier = 'free'; // 'free' or 'pro'
+        this.watermarkEnabled = true;
+        
+        // MIDI Controller
+        this.midiAccess = null;
+        this.midiDevices = new Map();
+        this.midiMappings = {
+            1: 'sensitivity',    // CC1 -> Sensitivity
+            2: 'smoothing',      // CC2 -> Smoothing
+            3: 'scene',          // CC3 -> Scene
+            4: 'theme'           // CC4 -> Theme
+        };
+        
+        // Advanced Waveform Analysis
+        this.waveformAnalysis = {
+            type: 'spectral',
+            windowFunction: 'hanning',
+            freqMin: 20,
+            freqMax: 20000,
+            spectralData: null,
+            phaseData: null,
+            harmonicData: null
+        };
+        
         this.setupCanvas();
         this.setupEventListeners();
         this.setupAdvancedControls();
+        this.setupMonetization();
+        this.setupMIDI();
+        this.setupAuthentication();
+        this.updatePresetDropdown(); // Initialize custom presets dropdown
         this.clearCanvas();
     }
 
@@ -287,6 +316,441 @@ class AudioVisualizer {
         document.getElementById('loadPreset').addEventListener('click', () => {
             this.loadCustomPreset();
         });
+
+        document.getElementById('deletePreset').addEventListener('click', () => {
+            this.deleteCustomPresetPrompt();
+        });
+
+        // Advanced waveform controls
+        document.getElementById('waveformType').addEventListener('change', (e) => {
+            this.waveformAnalysis.type = e.target.value;
+        });
+
+        document.getElementById('windowFunction').addEventListener('change', (e) => {
+            this.waveformAnalysis.windowFunction = e.target.value;
+        });
+
+        document.getElementById('freqMin').addEventListener('input', (e) => {
+            this.waveformAnalysis.freqMin = parseInt(e.target.value);
+            document.getElementById('freqMinValue').textContent = e.target.value + 'Hz';
+        });
+
+        document.getElementById('freqMax').addEventListener('input', (e) => {
+            this.waveformAnalysis.freqMax = parseInt(e.target.value);
+            document.getElementById('freqMaxValue').textContent = (e.target.value >= 1000 ? 
+                (e.target.value / 1000).toFixed(1) + 'kHz' : e.target.value + 'Hz');
+        });
+
+        // MIDI controls
+        document.getElementById('midiBtn').addEventListener('click', () => {
+            document.getElementById('midiModal').classList.add('active');
+        });
+
+        // Mobile controls toggle
+        document.getElementById('toggleControlsBtn').addEventListener('click', () => {
+            const controlPanel = document.querySelector('.control-panel');
+            controlPanel.classList.toggle('active');
+        });
+
+        // Control panel resizing
+        this.setupControlPanelResizing();
+
+        // Test resize functionality with keyboard shortcut (Ctrl+R)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                const controlPanel = document.querySelector('.control-panel');
+                const currentWidth = controlPanel.offsetWidth;
+                const newWidth = currentWidth === 320 ? 400 : 320;
+                controlPanel.style.width = newWidth + 'px';
+                console.log('Test resize:', { currentWidth, newWidth });
+            }
+        });
+
+        document.getElementById('midiScanBtn').addEventListener('click', () => {
+            this.scanMIDIDevices();
+        });
+    }
+
+    setupAuthentication() {
+        // Initialize auth service
+        this.auth = new AuthService();
+        
+        // Auth modal controls
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            this.showAuthModal('login');
+        });
+        
+        document.getElementById('signupBtn').addEventListener('click', () => {
+            this.showAuthModal('signup');
+        });
+        
+        document.getElementById('closeAuthModal').addEventListener('click', () => {
+            this.hideAuthModal();
+        });
+        
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleLogin();
+        });
+        
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleSignup();
+        });
+        
+        document.getElementById('forgotPasswordForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handlePasswordReset();
+        });
+        
+        // Form switching
+        document.getElementById('switchToSignup').addEventListener('click', () => {
+            this.switchAuthForm('signup');
+        });
+        
+        document.getElementById('switchToLogin').addEventListener('click', () => {
+            this.switchAuthForm('login');
+        });
+        
+        document.getElementById('forgotPasswordBtn').addEventListener('click', () => {
+            this.switchAuthForm('forgot');
+        });
+        
+        document.getElementById('switchToLoginFromReset').addEventListener('click', () => {
+            this.switchAuthForm('login');
+        });
+        
+        // Google OAuth
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
+            this.handleGoogleSignIn();
+        });
+        
+        document.getElementById('googleSignupBtn').addEventListener('click', () => {
+            this.handleGoogleSignIn();
+        });
+        
+        // User menu
+        document.getElementById('userMenuBtn').addEventListener('click', () => {
+            this.toggleUserMenu();
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            this.handleLogout();
+        });
+        
+        document.getElementById('profileBtn').addEventListener('click', () => {
+            this.showProfileModal();
+        });
+        
+        document.getElementById('projectsBtn').addEventListener('click', () => {
+            this.showProjectsModal();
+        });
+        
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            this.showSettingsModal();
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('userDropdown');
+            const menuBtn = document.getElementById('userMenuBtn');
+            
+            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Listen for auth state changes
+        this.auth.onAuthStateChange((event, session) => {
+            this.onAuthStateChange(event, session);
+        });
+    }
+
+    setupMonetization() {
+        // Upgrade buttons
+        document.getElementById('upgradeBtn').addEventListener('click', () => {
+            this.showUpgradeModal();
+        });
+
+        document.getElementById('upgradeFromExport').addEventListener('click', () => {
+            this.showUpgradeModal();
+        });
+
+        document.getElementById('upgradeToPro').addEventListener('click', () => {
+            this.upgradeToPro();
+        });
+
+        document.getElementById('closeUpgradeModal').addEventListener('click', () => {
+            document.getElementById('upgradeModal').classList.remove('active');
+        });
+
+        // Apply tier restrictions
+        this.applyTierRestrictions();
+    }
+
+    setupControlPanelResizing() {
+        const controlPanel = document.querySelector('.control-panel');
+        let isResizing = false;
+        let startX, startWidth;
+
+        // Mouse events for resizing
+        controlPanel.addEventListener('mousedown', (e) => {
+            // Check if click is on the resize handle area (left edge of panel)
+            const rect = controlPanel.getBoundingClientRect();
+            const clickX = e.clientX;
+            const panelLeft = rect.left;
+            
+            console.log('Mouse down:', { clickX, panelLeft, isInRange: clickX >= panelLeft - 8 && clickX <= panelLeft + 8 });
+            
+            // Allow clicking within 8px of the left edge
+            if (clickX >= panelLeft - 8 && clickX <= panelLeft + 8) {
+                console.log('Starting resize...');
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = controlPanel.offsetWidth;
+                
+                controlPanel.classList.add('resizing');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            
+            const deltaX = startX - e.clientX;
+            const newWidth = Math.max(320, Math.min(600, startWidth + deltaX));
+            
+            console.log('Resizing:', { deltaX, newWidth, currentWidth: controlPanel.offsetWidth });
+            controlPanel.style.width = newWidth + 'px';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                controlPanel.classList.remove('resizing');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                
+                // Save the width to localStorage
+                localStorage.setItem('eargoo_control_panel_width', controlPanel.offsetWidth);
+            }
+        });
+
+        // Also allow resizing by clicking on the resize indicator
+        const resizeIndicator = document.querySelector('.resize-indicator');
+        if (resizeIndicator) {
+            resizeIndicator.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = controlPanel.offsetWidth;
+                
+                controlPanel.classList.add('resizing');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        }
+
+        // Load saved width on startup
+        const savedWidth = localStorage.getItem('eargoo_control_panel_width');
+        if (savedWidth) {
+            const width = Math.max(320, Math.min(600, parseInt(savedWidth)));
+            controlPanel.style.width = width + 'px';
+        }
+
+        // Touch events for mobile resizing
+        let touchStartX, touchStartWidth;
+        
+        controlPanel.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            const rect = controlPanel.getBoundingClientRect();
+            const touchX = touch.clientX;
+            const panelLeft = rect.left;
+            
+            if (touchX >= panelLeft - 8 && touchX <= panelLeft + 8) {
+                touchStartX = touch.clientX;
+                touchStartWidth = controlPanel.offsetWidth;
+                controlPanel.classList.add('resizing');
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (touchStartX === undefined) return;
+            
+            const touch = e.touches[0];
+            const deltaX = touchStartX - touch.clientX;
+            const newWidth = Math.max(320, Math.min(600, touchStartWidth + deltaX));
+            
+            controlPanel.style.width = newWidth + 'px';
+            e.preventDefault();
+        });
+
+        document.addEventListener('touchend', () => {
+            if (touchStartX !== undefined) {
+                touchStartX = undefined;
+                controlPanel.classList.remove('resizing');
+                localStorage.setItem('eargoo_control_panel_width', controlPanel.offsetWidth);
+            }
+        });
+    }
+
+    setupMIDI() {
+        document.getElementById('closeMidiModal').addEventListener('click', () => {
+            document.getElementById('midiModal').classList.remove('active');
+        });
+
+        document.getElementById('connectMidiDevice').addEventListener('click', () => {
+            this.connectSelectedMIDIDevice();
+        });
+
+        // Initialize MIDI if available
+        if (navigator.requestMIDIAccess) {
+            this.initializeMIDI();
+        } else {
+            document.getElementById('midiStatus').textContent = 'MIDI not supported';
+        }
+    }
+
+    async initializeMIDI() {
+        try {
+            this.midiAccess = await navigator.requestMIDIAccess();
+            this.midiAccess.addEventListener('statechange', (e) => {
+                this.onMIDIStateChange(e);
+            });
+            
+            // Scan for existing devices
+            this.scanMIDIDevices();
+        } catch (error) {
+            console.error('MIDI initialization failed:', error);
+            document.getElementById('midiStatus').textContent = 'MIDI access denied';
+        }
+    }
+
+    scanMIDIDevices() {
+        if (!this.midiAccess) return;
+
+        const deviceList = document.getElementById('midiDeviceList');
+        deviceList.innerHTML = '';
+
+        const devices = [];
+        
+        for (const input of this.midiAccess.inputs.values()) {
+            devices.push({ type: 'input', device: input });
+        }
+
+        if (devices.length === 0) {
+            deviceList.innerHTML = '<p style="color: var(--text-muted);">No MIDI devices found</p>';
+            return;
+        }
+
+        devices.forEach((item, index) => {
+            const deviceElement = document.createElement('div');
+            deviceElement.className = 'midi-device-item';
+            deviceElement.style.cssText = `
+                padding: 12px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+                margin: 8px 0;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            `;
+            
+            deviceElement.innerHTML = `
+                <div style="font-weight: 600; color: var(--text-primary);">${item.device.name}</div>
+                <div style="font-size: 12px; color: var(--text-muted);">${item.device.manufacturer || 'Unknown'}</div>
+            `;
+
+            deviceElement.addEventListener('click', () => {
+                document.querySelectorAll('.midi-device-item').forEach(el => {
+                    el.style.borderColor = 'var(--border-secondary)';
+                });
+                deviceElement.style.borderColor = 'var(--accent-primary)';
+                this.selectedMIDIDevice = item.device;
+            });
+
+            deviceList.appendChild(deviceElement);
+        });
+    }
+
+    connectSelectedMIDIDevice() {
+        if (!this.selectedMIDIDevice) {
+            this.showNotification('Please select a MIDI device first', 'warning');
+            return;
+        }
+
+        this.selectedMIDIDevice.addEventListener('midimessage', (message) => {
+            this.handleMIDIMessage(message);
+        });
+
+        document.getElementById('midiIndicator').classList.add('connected');
+        document.getElementById('midiStatus').textContent = `Connected: ${this.selectedMIDIDevice.name}`;
+        document.getElementById('midiModal').classList.remove('active');
+        
+        this.showNotification(`MIDI controller connected: ${this.selectedMIDIDevice.name}`, 'success');
+    }
+
+    handleMIDIMessage(message) {
+        const [status, data1, data2] = message.data;
+        
+        // Handle Control Change messages (176-191)
+        if (status >= 176 && status <= 191) {
+            const ccNumber = data1;
+            const value = data2 / 127; // Normalize to 0-1
+            
+            this.handleMIDIControlChange(ccNumber, value);
+        }
+    }
+
+    handleMIDIControlChange(ccNumber, value) {
+        const mapping = this.midiMappings[ccNumber];
+        if (!mapping) return;
+
+        switch (mapping) {
+            case 'sensitivity':
+                this.settings.sensitivity = 0.5 + (value * 2.5); // 0.5 to 3.0
+                document.getElementById('sensitivity').value = this.settings.sensitivity;
+                document.getElementById('sensitivityValue').textContent = this.settings.sensitivity.toFixed(1);
+                break;
+                
+            case 'smoothing':
+                this.settings.smoothing = value * 0.95; // 0 to 0.95
+                document.getElementById('smoothing').value = this.settings.smoothing;
+                document.getElementById('smoothingValue').textContent = this.settings.smoothing.toFixed(2);
+                this.updateAudioSettings();
+                break;
+                
+            case 'scene':
+                const scenes = ['bars', 'radial', 'waveform', 'particles', 'spiral', 'rings', 'tunnel', 'galaxy', 'space'];
+                const sceneIndex = Math.floor(value * scenes.length);
+                this.setScene(scenes[sceneIndex]);
+                break;
+                
+            case 'theme':
+                const themes = ['neon', 'ocean', 'sunset', 'forest', 'cyberpunk', 'monochrome'];
+                const themeIndex = Math.floor(value * themes.length);
+                this.setColorTheme(themes[themeIndex]);
+                break;
+        }
+    }
+
+    onMIDIStateChange(event) {
+        if (event.port.state === 'connected') {
+            this.showNotification(`MIDI device connected: ${event.port.name}`, 'success');
+        } else {
+            this.showNotification(`MIDI device disconnected: ${event.port.name}`, 'warning');
+        }
+        this.scanMIDIDevices();
     }
 
     updateAudioSettings() {
@@ -317,52 +781,117 @@ class AudioVisualizer {
     }
 
     loadPreset(presetName) {
-        const preset = this.presets[presetName];
-        if (!preset) return;
+        let preset;
+        
+        // Check if it's a custom preset
+        if (presetName.startsWith('custom_')) {
+            const customName = presetName.replace('custom_', '');
+            const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+            preset = customPresets[customName];
+            
+            if (!preset) {
+                this.showNotification(`Custom preset "${customName}" not found`, 'error');
+                return;
+            }
+        } else {
+            // Built-in preset
+            preset = this.presets[presetName];
+            if (!preset) {
+                this.showNotification(`Preset "${presetName}" not found`, 'error');
+                return;
+            }
+        }
 
         // Apply preset settings
         this.setScene(preset.scene);
         this.setColorTheme(preset.theme);
         this.settings.videoResolution = preset.resolution;
         this.settings.sensitivity = preset.sensitivity;
+        
+        // Apply additional settings if available
+        if (preset.fftSize) this.settings.fftSize = preset.fftSize;
+        if (preset.smoothing) this.settings.smoothing = preset.smoothing;
 
         // Update UI
         document.getElementById('videoResolution').value = preset.resolution;
         document.getElementById('sensitivity').value = preset.sensitivity;
         document.getElementById('sensitivityValue').textContent = preset.sensitivity.toFixed(1);
+        
+        if (preset.fftSize) {
+            document.getElementById('fftSize').value = preset.fftSize;
+        }
+        if (preset.smoothing) {
+            document.getElementById('smoothing').value = preset.smoothing;
+            document.getElementById('smoothingValue').textContent = preset.smoothing.toFixed(2);
+        }
 
-        this.showNotification(`Loaded ${presetName.replace('-', ' ')} preset`, 'success');
+        this.updateAudioSettings();
+        
+        const displayName = presetName.startsWith('custom_') ? 
+            presetName.replace('custom_', '') : 
+            presetName.replace('-', ' ');
+            
+        this.showNotification(`📂 Loaded ${displayName} preset`, 'success');
     }
 
     saveCustomPreset() {
         const name = prompt('Enter preset name:');
-        if (!name) return;
+        if (!name || name.trim() === '') return;
+
+        // Validate preset name
+        if (name.length > 50) {
+            this.showNotification('Preset name too long (max 50 characters)', 'error');
+            return;
+        }
 
         const preset = {
+            name: name.trim(),
             scene: this.currentScene,
             theme: this.settings.colorTheme,
             resolution: this.settings.videoResolution,
             sensitivity: this.settings.sensitivity,
             fftSize: this.settings.fftSize,
-            smoothing: this.settings.smoothing
+            smoothing: this.settings.smoothing,
+            timestamp: Date.now()
         };
 
-        localStorage.setItem(`audiovis_preset_${name}`, JSON.stringify(preset));
-        this.showNotification(`Saved preset: ${name}`, 'success');
+        // Get existing presets
+        const existingPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        existingPresets[name] = preset;
+        
+        localStorage.setItem('eargoo_custom_presets', JSON.stringify(existingPresets));
+        
+        // Update preset select dropdown
+        this.updatePresetDropdown();
+        
+        this.showNotification(`💾 Saved preset: "${name}"`, 'success');
     }
 
     loadCustomPreset() {
-        const name = prompt('Enter preset name to load:');
+        const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        const presetNames = Object.keys(customPresets);
+        
+        if (presetNames.length === 0) {
+            this.showNotification('No custom presets found', 'info');
+            return;
+        }
+
+        // Create a simple selection dialog
+        const presetList = presetNames.map(name => {
+            const preset = customPresets[name];
+            const date = new Date(preset.timestamp).toLocaleDateString();
+            return `${name} (${date})`;
+        }).join('\n');
+        
+        const name = prompt(`Available custom presets:\n\n${presetList}\n\nEnter preset name to load:`);
         if (!name) return;
 
-        const presetData = localStorage.getItem(`audiovis_preset_${name}`);
-        if (!presetData) {
+        const preset = customPresets[name];
+        if (!preset) {
             this.showNotification(`Preset "${name}" not found`, 'error');
             return;
         }
 
-        const preset = JSON.parse(presetData);
-        
         // Apply custom preset
         this.setScene(preset.scene);
         this.setColorTheme(preset.theme);
@@ -377,7 +906,209 @@ class AudioVisualizer {
         document.getElementById('sensitivityValue').textContent = preset.sensitivity.toFixed(1);
 
         this.updateAudioSettings();
-        this.showNotification(`Loaded custom preset: ${name}`, 'success');
+        this.showNotification(`📂 Loaded preset: "${name}"`, 'success');
+    }
+
+    updatePresetDropdown() {
+        const presetSelect = document.getElementById('presetSelect');
+        const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        
+        // Clear existing custom options
+        const existingOptions = presetSelect.querySelectorAll('option[data-custom="true"]');
+        existingOptions.forEach(option => option.remove());
+        
+        // Add custom presets
+        Object.keys(customPresets).forEach(name => {
+            const option = document.createElement('option');
+            option.value = `custom_${name}`;
+            option.textContent = `💾 ${name}`;
+            option.setAttribute('data-custom', 'true');
+            presetSelect.appendChild(option);
+        });
+    }
+
+    deleteCustomPreset(presetName) {
+        const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        
+        if (!customPresets[presetName]) {
+            this.showNotification(`Preset "${presetName}" not found`, 'error');
+            return;
+        }
+        
+        delete customPresets[presetName];
+        localStorage.setItem('eargoo_custom_presets', JSON.stringify(customPresets));
+        
+        this.updatePresetDropdown();
+        this.showNotification(`🗑️ Deleted preset: "${presetName}"`, 'success');
+    }
+
+    listCustomPresets() {
+        const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        const presetNames = Object.keys(customPresets);
+        
+        if (presetNames.length === 0) {
+            this.showNotification('No custom presets found', 'info');
+            return;
+        }
+        
+        const presetList = presetNames.map(name => {
+            const preset = customPresets[name];
+            const date = new Date(preset.timestamp).toLocaleDateString();
+            return `• ${name} (${date})`;
+        }).join('\n');
+        
+        alert(`Custom Presets:\n\n${presetList}\n\nTotal: ${presetNames.length} preset(s)`);
+    }
+
+    deleteCustomPresetPrompt() {
+        const customPresets = JSON.parse(localStorage.getItem('eargoo_custom_presets') || '{}');
+        const presetNames = Object.keys(customPresets);
+        
+        if (presetNames.length === 0) {
+            this.showNotification('No custom presets to delete', 'info');
+            return;
+        }
+        
+        const presetList = presetNames.map(name => {
+            const preset = customPresets[name];
+            const date = new Date(preset.timestamp).toLocaleDateString();
+            return `${name} (${date})`;
+        }).join('\n');
+        
+        const name = prompt(`Available custom presets:\n\n${presetList}\n\nEnter preset name to delete:`);
+        if (!name) return;
+        
+        if (confirm(`Are you sure you want to delete the preset "${name}"?`)) {
+            this.deleteCustomPreset(name);
+        }
+    }
+
+    showUpgradeModal() {
+        document.getElementById('upgradeModal').classList.add('active');
+        
+        // Track upgrade modal views for analytics
+        this.trackEvent('upgrade_modal_viewed');
+    }
+
+    upgradeToPro() {
+        // In a real app, this would integrate with Stripe/PayPal
+        // For demo purposes, we'll simulate the upgrade
+        this.userTier = 'pro';
+        this.watermarkEnabled = false;
+        
+        // Update UI
+        document.getElementById('tierBadge').textContent = 'PRO TIER';
+        document.getElementById('tierBadge').className = 'tier-badge pro';
+        document.getElementById('upgradeBtn').style.display = 'none';
+        
+        // Apply pro tier features
+        this.applyTierRestrictions();
+        
+        // Hide watermark
+        document.getElementById('watermark').style.display = 'none';
+        
+        document.getElementById('upgradeModal').classList.remove('active');
+        this.showNotification('🎉 Welcome to Pro! All features unlocked!', 'success');
+        
+        this.trackEvent('upgrade_completed');
+    }
+
+    applyTierRestrictions() {
+        const isFree = this.userTier === 'free';
+        
+        // Update body class for CSS targeting
+        document.body.className = isFree ? 'free-tier-only' : 'pro-tier-only';
+        
+        // Restrict high-end video options for free tier
+        const restrictedOptions = document.querySelectorAll('option[value*="🔒"]');
+        restrictedOptions.forEach(option => {
+            if (isFree) {
+                option.disabled = true;
+                option.style.color = 'var(--text-muted)';
+            } else {
+                option.disabled = false;
+                option.style.color = 'var(--text-primary)';
+                option.textContent = option.textContent.replace(' 🔒', '');
+            }
+        });
+        
+        // Update export tier restriction visibility
+        const exportTierRestriction = document.getElementById('exportTierRestriction');
+        if (exportTierRestriction) {
+            if (isFree) {
+                exportTierRestriction.style.display = 'block';
+            } else {
+                exportTierRestriction.style.display = 'none';
+            }
+        }
+        
+        // Hide MIDI control card for free users
+        const midiControlCard = document.querySelector('.control-card[data-card="midi"]');
+        if (midiControlCard) {
+            if (isFree) {
+                midiControlCard.style.display = 'none';
+            } else {
+                midiControlCard.style.display = 'block';
+            }
+        }
+        
+        // Show/hide watermark
+        const watermark = document.getElementById('watermark');
+        if (isFree) {
+            watermark.style.display = 'block';
+            this.watermarkEnabled = true;
+        } else {
+            watermark.style.display = 'none';
+            this.watermarkEnabled = false;
+        }
+    }
+
+    trackEvent(eventName, data = {}) {
+        // Analytics tracking - in production would send to analytics service
+        console.log(`Analytics: ${eventName}`, data);
+        
+        // Could integrate with Google Analytics, Mixpanel, etc.
+        if (window.gtag) {
+            window.gtag('event', eventName, data);
+        }
+    }
+
+    drawWatermark() {
+        if (!this.watermarkEnabled || this.userTier === 'pro') return;
+        
+        const canvas = this.canvas;
+        const ctx = this.ctx;
+        
+        // Save current context
+        ctx.save();
+        
+        // Watermark styling
+        ctx.font = '14px -apple-system, BlinkMacSystemFont, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = 3;
+        
+        const text = 'EarGoo - Free Tier';
+        
+        const metrics = ctx.measureText(text);
+        const textWidth = metrics.width;
+        const textHeight = 14;
+        
+        // Position in bottom right
+        const x = canvas.width - textWidth - 20;
+        const y = canvas.height - textHeight - 10;
+        
+        // Draw background
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.fillRect(x - 8, y - textHeight - 4, textWidth + 16, textHeight + 12);
+        
+        // Draw text with stroke
+        ctx.strokeText(text, x, y);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillText(text, x, y);
+        
+        // Restore context
+        ctx.restore();
     }
 
     async initAudioContext() {
@@ -815,7 +1546,7 @@ class AudioVisualizer {
         switch (this.currentScene) {
             case 'bars': this.drawBars(sensitiveDataArray); break;
             case 'radial': this.drawRadial(sensitiveDataArray); break;
-            case 'waveform': this.drawWaveform(); break;
+            case 'waveform': this.drawAdvancedWaveform(sensitiveDataArray); break;
             case 'particles': this.drawParticles(sensitiveDataArray); break;
             case 'spiral': this.drawSpiral(sensitiveDataArray); break;
             case 'rings': this.drawRings(sensitiveDataArray); break;
@@ -823,6 +1554,9 @@ class AudioVisualizer {
             case 'galaxy': this.drawGalaxy(sensitiveDataArray); break;
             case 'space': this.drawSpace(sensitiveDataArray); break;
         }
+        
+        // Draw watermark last (on top)
+        this.drawWatermark();
     }
 
     updateAnalysisDisplay(bass, mid, treble) {
@@ -1041,25 +1775,44 @@ class AudioVisualizer {
         this.ctx.restore();
     }
 
-    drawWaveform() {
+    drawAdvancedWaveform(dataArray) {
         if (!this.analyser) return;
-        
-        const timeData = new Uint8Array(this.analyser.fftSize);
-        this.analyser.getByteTimeDomainData(timeData);
         
         const width = this.canvas.width;
         const height = this.canvas.height;
+        const centerY = height / 2;
         
+        // Get time domain data for waveform
+        const timeData = new Uint8Array(this.analyser.fftSize);
+        this.analyser.getByteTimeDomainData(timeData);
+        
+        switch (this.waveformAnalysis.type) {
+            case 'amplitude':
+                this.drawAmplitudeWaveform(timeData, width, height, centerY);
+                break;
+            case 'spectral':
+                this.drawSpectralWaveform(dataArray, width, height);
+                break;
+            case 'phase':
+                this.drawPhaseWaveform(timeData, dataArray, width, height, centerY);
+                break;
+            case 'harmonic':
+                this.drawHarmonicWaveform(dataArray, width, height);
+                break;
+        }
+    }
+
+    drawAmplitudeWaveform(timeData, width, height, centerY) {
         this.ctx.strokeStyle = this.getColor(0);
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         
         const sliceWidth = width / timeData.length;
         let x = 0;
         
         for (let i = 0; i < timeData.length; i++) {
-            const v = timeData[i] / 128.0;
-            const y = v * height / 2;
+            const v = (timeData[i] - 128) / 128.0;
+            const y = centerY + (v * centerY * 0.8);
             
             if (i === 0) {
                 this.ctx.moveTo(x, y);
@@ -1069,6 +1822,126 @@ class AudioVisualizer {
             x += sliceWidth;
         }
         this.ctx.stroke();
+        
+        // Add envelope
+        this.ctx.globalAlpha = 0.3;
+        this.ctx.fillStyle = this.getColor(0);
+        this.ctx.fill();
+        this.ctx.globalAlpha = 1;
+    }
+
+    drawSpectralWaveform(dataArray, width, height) {
+        // Apply frequency range filter
+        const nyquist = this.audioContext.sampleRate / 2;
+        const startBin = Math.floor((this.waveformAnalysis.freqMin / nyquist) * dataArray.length);
+        const endBin = Math.floor((this.waveformAnalysis.freqMax / nyquist) * dataArray.length);
+        
+        const filteredData = dataArray.slice(startBin, endBin);
+        const barWidth = width / filteredData.length;
+        
+        for (let i = 0; i < filteredData.length; i++) {
+            const value = filteredData[i] / 255;
+            const barHeight = value * height * 0.9;
+            
+            // Create spectral gradient
+            const gradient = this.ctx.createLinearGradient(0, height, 0, height - barHeight);
+            gradient.addColorStop(0, this.getColor(0) + '40');
+            gradient.addColorStop(0.5, this.getColor(1) + '80');
+            gradient.addColorStop(1, this.getColor(2));
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(i * barWidth, height - barHeight, barWidth - 1, barHeight);
+            
+            // Add peak indicators
+            if (value > 0.8) {
+                this.ctx.fillStyle = this.getColor(3);
+                this.ctx.fillRect(i * barWidth, height - barHeight - 5, barWidth - 1, 3);
+            }
+        }
+    }
+
+    drawPhaseWaveform(timeData, freqData, width, height, centerY) {
+        // Create phase relationship visualization
+        this.ctx.strokeStyle = this.getColor(0);
+        this.ctx.lineWidth = 1;
+        
+        const points = Math.min(timeData.length, freqData.length, 200);
+        
+        for (let i = 0; i < points; i++) {
+            const timeValue = (timeData[i] - 128) / 128.0;
+            const freqValue = freqData[i] / 255;
+            
+            const angle = (i / points) * Math.PI * 2 + this.time;
+            const radius = freqValue * Math.min(width, height) * 0.3;
+            
+            const x = width / 2 + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius + (timeValue * 50);
+            
+            if (i === 0) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+            
+            // Draw phase points
+            this.ctx.fillStyle = this.getColor(Math.floor(i / points * 4));
+            this.ctx.fillRect(x - 1, y - 1, 2, 2);
+        }
+        
+        this.ctx.stroke();
+    }
+
+    drawHarmonicWaveform(dataArray, width, height) {
+        // Detect and visualize harmonics
+        const fundamentalFreq = this.detectFundamentalFreq(dataArray);
+        if (!fundamentalFreq) return;
+        
+        // Draw fundamental and harmonics
+        for (let harmonic = 1; harmonic <= 8; harmonic++) {
+            const freq = fundamentalFreq * harmonic;
+            const bin = Math.floor((freq / (this.audioContext.sampleRate / 2)) * dataArray.length);
+            
+            if (bin >= dataArray.length) break;
+            
+            const amplitude = dataArray[bin] / 255;
+            const x = (bin / dataArray.length) * width;
+            const barHeight = amplitude * height * 0.8;
+            
+            // Color code by harmonic
+            const hue = (harmonic - 1) * 45;
+            this.ctx.fillStyle = `hsl(${hue}, 80%, 60%)`;
+            this.ctx.fillRect(x - 2, height - barHeight, 4, barHeight);
+            
+            // Label harmonics
+            if (amplitude > 0.1) {
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '10px sans-serif';
+                this.ctx.fillText(`H${harmonic}`, x - 8, height - barHeight - 5);
+            }
+        }
+    }
+
+    detectFundamentalFreq(dataArray) {
+        // Simple peak detection for fundamental frequency
+        let maxAmplitude = 0;
+        let maxIndex = 0;
+        
+        // Look in the lower frequency range for fundamental
+        const searchRange = Math.min(dataArray.length / 4, 100);
+        
+        for (let i = 5; i < searchRange; i++) {
+            if (dataArray[i] > maxAmplitude) {
+                maxAmplitude = dataArray[i];
+                maxIndex = i;
+            }
+        }
+        
+        if (maxAmplitude < 50) return null;
+        
+        // Convert bin to frequency
+        const nyquist = this.audioContext.sampleRate / 2;
+        return (maxIndex / dataArray.length) * nyquist;
     }
 
     drawParticles(dataArray) {
@@ -1392,6 +2265,176 @@ class AudioVisualizer {
                 container.className = 'notification hidden';
             }, 400);
         }, type === 'error' ? 5000 : 2000);
+    }
+
+    // Authentication Methods
+    showAuthModal(type = 'login') {
+        const modal = document.getElementById('authModal');
+        const title = document.getElementById('authTitle');
+        
+        // Hide all forms
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('forgotPasswordForm').style.display = 'none';
+        
+        // Show appropriate form
+        switch (type) {
+            case 'login':
+                title.textContent = 'Welcome Back';
+                document.getElementById('loginForm').style.display = 'block';
+                break;
+            case 'signup':
+                title.textContent = 'Create Account';
+                document.getElementById('signupForm').style.display = 'block';
+                break;
+            case 'forgot':
+                title.textContent = 'Reset Password';
+                document.getElementById('forgotPasswordForm').style.display = 'block';
+                break;
+        }
+        
+        modal.classList.add('active');
+    }
+
+    hideAuthModal() {
+        document.getElementById('authModal').classList.remove('active');
+    }
+
+    switchAuthForm(type) {
+        this.showAuthModal(type);
+    }
+
+    async handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        if (!email || !password) {
+            this.showNotification('Please fill in all fields', 'error');
+            return;
+        }
+        
+        const result = await this.auth.signIn(email, password);
+        if (result.success) {
+            this.hideAuthModal();
+        }
+    }
+
+    async handleSignup() {
+        const name = document.getElementById('signupName').value;
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        
+        if (!name || !email || !password || !confirmPassword) {
+            this.showNotification('Please fill in all fields', 'error');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            this.showNotification('Passwords do not match', 'error');
+            return;
+        }
+        
+        if (password.length < 8) {
+            this.showNotification('Password must be at least 8 characters', 'error');
+            return;
+        }
+        
+        if (!agreeTerms) {
+            this.showNotification('Please agree to the terms of service', 'error');
+            return;
+        }
+        
+        const result = await this.auth.signUp(email, password, name);
+        if (result.success) {
+            this.showNotification('Account created! Please check your email to verify your account.', 'success');
+            this.switchAuthForm('login');
+        }
+    }
+
+    async handlePasswordReset() {
+        const email = document.getElementById('resetEmail').value;
+        
+        if (!email) {
+            this.showNotification('Please enter your email address', 'error');
+            return;
+        }
+        
+        const result = await this.auth.resetPassword(email);
+        if (result.success) {
+            this.switchAuthForm('login');
+        }
+    }
+
+    async handleGoogleSignIn() {
+        const result = await this.auth.signInWithGoogle();
+        if (result.success) {
+            this.hideAuthModal();
+        }
+    }
+
+    async handleLogout() {
+        const result = await this.auth.signOut();
+        if (result.success) {
+            document.getElementById('userDropdown').classList.remove('active');
+        }
+    }
+
+    toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('active');
+    }
+
+    showProfileModal() {
+        // TODO: Implement profile modal
+        this.showNotification('Profile management coming soon!', 'info');
+        document.getElementById('userDropdown').classList.remove('active');
+    }
+
+    showProjectsModal() {
+        // TODO: Implement projects modal
+        this.showNotification('Project management coming soon!', 'info');
+        document.getElementById('userDropdown').classList.remove('active');
+    }
+
+    showSettingsModal() {
+        // TODO: Implement settings modal
+        this.showNotification('Settings coming soon!', 'info');
+        document.getElementById('userDropdown').classList.remove('active');
+    }
+
+    onAuthStateChange(event, session) {
+        console.log('Auth state changed in visualizer:', event, session);
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+            // Update user tier from auth service
+            this.userTier = session.user.user_metadata?.tier || 'free';
+            this.watermarkEnabled = this.userTier === 'free';
+            
+            // Apply tier restrictions
+            this.applyTierRestrictions();
+            
+            // Update watermark visibility
+            this.updateWatermarkVisibility();
+        } else if (event === 'SIGNED_OUT') {
+            // Reset to free tier
+            this.userTier = 'free';
+            this.watermarkEnabled = true;
+            
+            // Apply tier restrictions
+            this.applyTierRestrictions();
+            
+            // Update watermark visibility
+            this.updateWatermarkVisibility();
+        }
+    }
+
+    updateWatermarkVisibility() {
+        const watermark = document.getElementById('watermark');
+        if (watermark) {
+            watermark.style.display = this.watermarkEnabled ? 'block' : 'none';
+        }
     }
 }
 

@@ -1,174 +1,410 @@
-# 🎵 Audio Visualizer
+# 🎵 EarGoo
 
-A modern, real-time audio visualizer built with Next.js, TypeScript, and the Web Audio API. Features multiple visualization modes, beat detection, and an intuitive user interface.
-
-![Audio Visualizer](https://img.shields.io/badge/Built%20with-Next.js-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Web Audio API](https://img.shields.io/badge/Web%20Audio%20API-FF6B6B?style=for-the-badge)
+A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management powered by Supabase.
 
 ## ✨ Features
 
-- **Multiple Visualization Modes**: Frequency bars, radial spectrum, hybrid view, particle system, and waveform
-- **Real-time Audio Analysis**: FFT-based frequency analysis with customizable parameters
-- **Beat Detection**: Adaptive threshold algorithm with visual beat accents
-- **Multiple Input Sources**: Load audio files or use microphone/DAW loopback
-- **Dynamic Color Palettes**: Auto-switching color schemes on detected beats
-- **Responsive Design**: Optimized for desktop and mobile devices
-- **Drag & Drop Support**: Simply drop audio files anywhere on the interface
-- **Glass Morphism UI**: Modern, intuitive interface with smooth animations
+### 🎨 Visualizations
+- **Frequency Bars** - Classic audio spectrum visualization
+- **Radial Spectrum** - Circular frequency display with beat detection
+- **Waveform Analysis** - Advanced time-domain and frequency-domain analysis
+- **Space Visualization** - Immersive cosmic particle system
+- **Spiral & Rings** - Dynamic geometric patterns
+- **Tunnel & Galaxy** - 3D-like depth effects
+- **Custom Themes** - Multiple color palettes and presets
 
-## 🚀 Getting Started
+### 🔧 Advanced Features
+- **Real-time Audio Analysis** - Web Audio API with configurable FFT
+- **MIDI Controller Support** - Real-time parameter control
+- **Video Recording** - Export visualizations as MP4 videos
+- **Drag & Drop** - Easy audio file loading
+- **Microphone Input** - Live audio processing
+- **Keyboard Shortcuts** - Quick access to controls
+
+### 👤 User Management
+- **Authentication** - Email/password and Google OAuth
+- **User Profiles** - Personalized settings and preferences
+- **Project Saving** - Cloud-based project storage
+- **Subscription Tiers** - Free and Pro plans
+- **Usage Analytics** - Track usage and performance
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- Node.js 16+ (for local development)
+- Modern web browser with Web Audio API support
+- Supabase account (for backend services)
 
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
+### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd audio-visualizer
+cd eargoo
 ```
 
-2. Install dependencies:
+### 2. Set Up Supabase
+
+#### Create a Supabase Project
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. Note your project URL and anon key
+
+#### Set Up Database
+1. Go to your Supabase project dashboard
+2. Navigate to the SQL Editor
+3. Copy and paste the contents of `supabase-setup.sql`
+4. Run the SQL script to create all tables and functions
+
+#### Configure Authentication
+1. Go to Authentication > Settings
+2. Configure your site URL (e.g., `http://localhost:8000`)
+3. Add Google OAuth provider (optional)
+4. Configure email templates
+
+#### Google OAuth Setup (Optional)
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project named "EarGoo"
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials:
+   - Application type: Web application
+   - Name: "EarGoo Web"
+   - Authorized origins: `http://localhost:8000`, `https://yourdomain.com`
+   - Redirect URI: `https://your-project.supabase.co/auth/v1/callback`
+5. Copy the Client ID to Supabase Google provider settings
+
+### 3. Configure the Application
+
+#### Set Up Environment Variables
+
+**Option 1: Environment Variables (Recommended for development)**
+Create a `.env.local` file in the root directory:
+
 ```bash
-npm install
+# Supabase Configuration
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
+
+# Optional: Analytics and Monitoring
+# GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+# ENABLE_ANALYTICS=true
 ```
 
-3. Run the development server:
+**Option 2: Static Hosting (env.json)**
+Create an `env.json` file in the root directory:
+
+```json
+{
+  "SUPABASE_URL": "https://your-project.supabase.co",
+  "SUPABASE_ANON_KEY": "your-anon-key-here",
+  "ENABLE_ANALYTICS": "false",
+  "ENABLE_ERROR_TRACKING": "false"
+}
+```
+
+**Option 3: Direct Config Update**
+Edit `config.js` directly:
+
+```javascript
+supabase: {
+    url: 'https://your-project.supabase.co',
+    anonKey: 'your-anon-key-here'
+}
+```
+
+### 4. Run the Application
+
+#### Option A: Simple HTTP Server
 ```bash
-npm run dev
+python3 -m http.server 8000
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+#### Option B: Node.js Development Server
+```bash
+npm install -g live-server
+live-server --port=8000
+```
 
-## 🎛️ Usage
+#### Option C: Python HTTP Server
+```bash
+python -m http.server 8000
+```
 
-### Loading Audio
+### 5. Access the Application
+Open your browser and navigate to `http://localhost:8000`
 
-1. **File Upload**: Click "Load File" or drag & drop audio files
-2. **Microphone**: Click "Microphone" for real-time input
-3. **DAW Integration**: Route your DAW output to a virtual audio device, set as system mic, then use microphone mode
+## 📁 Project Structure
 
-### Controls
-
-- **Visualization Mode**: Switch between different visual representations
-- **FFT Size**: Adjust frequency resolution (higher = more detail, more CPU)
-- **Smoothing**: Control visual stability vs responsiveness
-- **Volume**: Adjust output volume
-- **Color Palettes**: Multiple built-in color schemes with auto-switching
-
-### Visualization Modes
-
-- **Frequency Bars**: Classic spectrum analyzer with vertical bars
-- **Radial Spectrum**: Circular visualization with center glow effects
-- **Hybrid View**: Combination of bars and radial displays
-- **Particle System**: Dynamic particles responding to frequency bands
-- **Waveform**: Real-time waveform with frequency overlay
+```
+eargoo/
+├── index.html              # Main application HTML
+├── visualizer.js           # Core visualization engine
+├── auth.js                 # Authentication service
+├── supabase-setup.sql      # Database schema and setup
+├── README.md              # This file
+└── backup/                # Original files (if any)
+```
 
 ## 🔧 Configuration
 
 ### Audio Settings
+- **FFT Size**: 512-32768 (power of 2)
+- **Smoothing**: 0.0-0.95 (time constant)
+- **Sensitivity**: 0.1-3.0 (amplification)
 
-- **FFT Size**: 1024 - 32768 (power of 2)
-- **Smoothing**: 0.0 - 0.95 (lower = more responsive)
-- **Beat Sensitivity**: Adjustable threshold for beat detection
+### Video Export
+- **Resolution**: 720p, 1080p, 4K
+- **Quality**: Low, Medium, High
+- **Frame Rate**: 24, 30, 60 FPS
+- **Format**: MP4 (H.264) or WebM
 
-### Deployment
+### MIDI Mapping
+- **CC1**: Sensitivity
+- **CC2**: Smoothing
+- **CC3**: Scene Selection
+- **CC4**: Color Theme
 
-Deploy to Vercel with one click:
+## 💰 Subscription Tiers
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/audio-visualizer)
+### Free Tier
+- ✅ 3 videos per day
+- ✅ Basic visualizations
+- ✅ Watermark on exports
+- ✅ 720p resolution max
+- ✅ Community templates
+- ❌ MIDI controller support
 
-Or deploy to any platform that supports Next.js:
+### Pro Tier ($9.99/month)
+- ✅ Unlimited videos
+- ✅ All visualizations
+- ✅ No watermark
+- ✅ 4K resolution
+- ✅ Custom templates
+- ✅ Priority support
+- ✅ Advanced analytics
 
+### Enterprise Tier ($49.99/month)
+- ✅ Everything in Pro
+- ✅ Team collaboration
+- ✅ Custom branding
+- ✅ API access
+- ✅ Dedicated support
+- ✅ Usage analytics
+
+## 🎛️ Usage
+
+### Loading Audio
+1. **File Upload**: Click "Load Audio" or drag & drop audio files
+2. **Microphone**: Click "Microphone" for live input
+3. **Supported Formats**: MP3, WAV, OGG, M4A, FLAC
+
+### Creating Visualizations
+1. **Select Scene**: Choose from available visualization types
+2. **Adjust Settings**: Modify FFT size, smoothing, and sensitivity
+3. **Choose Theme**: Select color palette or create custom
+4. **Real-time Preview**: See changes instantly
+
+### Recording Videos
+1. **Configure Export**: Set resolution, quality, and format
+2. **Start Recording**: Click "Create Video"
+3. **Wait for Processing**: Monitor progress bar
+4. **Download**: Click "Download MP4" when ready
+
+### MIDI Control
+1. **Connect Device**: Click "MIDI Setup"
+2. **Select Device**: Choose from available MIDI devices
+3. **Map Controls**: Use CC knobs to control parameters
+4. **Real-time Control**: Adjust settings during playback
+
+## 🔒 Security
+
+### Authentication
+- Secure email/password authentication
+- Google OAuth integration
+- Password reset functionality
+- Session management
+
+### Data Protection
+- Row Level Security (RLS) policies
+- Encrypted data transmission
+- Secure file uploads
+- Privacy-compliant analytics
+
+### API Security
+- JWT token authentication
+- Rate limiting
+- Input validation
+- SQL injection prevention
+
+## 🚀 Deployment
+
+### Vercel Deployment
+1. Install Vercel CLI: `npm i -g vercel`
+2. Deploy: `vercel --prod`
+
+### Netlify Deployment
+1. Connect your GitHub repository
+2. Set build command: `echo "Static site"`
+3. Set publish directory: `.`
+
+### Custom Domain
+1. Configure DNS records
+2. Update Supabase site URL
+3. Set up SSL certificate
+
+### Environment Variables
+For production deployment, set these environment variables:
+
+**Vercel:**
 ```bash
-npm run build
-npm start
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key-here
 ```
+
+**Netlify:**
+- Go to Site Settings > Environment Variables
+- Add `SUPABASE_URL` and `SUPABASE_ANON_KEY`
+
+**Static Hosting:**
+- Create `env.json` with your production values
+- Or update `config.js` directly with production values
+- Or use a build process to inject environment variables
 
 ## 🛠️ Development
 
-### Project Structure
+### Local Development
+```bash
+# Start development server
+python3 -m http.server 8000
 
-```
-src/
-├── app/                 # Next.js app directory
-├── components/          # React components
-│   ├── ui/             # Base UI components
-│   ├── audio-controls.tsx
-│   └── visualizer-canvas.tsx
-├── hooks/              # Custom React hooks
-├── lib/                # Utilities and core logic
-│   ├── audio-engine.ts    # Web Audio API wrapper
-│   ├── visualization-renderer.ts  # Canvas rendering
-│   └── utils.ts
-└── types/              # TypeScript type definitions
+# Watch for changes (optional)
+npm install -g nodemon
+nodemon --watch . --exec "python3 -m http.server 8000"
 ```
 
-### Key Technologies
+### Code Structure
+- **Modular Design**: Separate concerns for audio, visuals, and auth
+- **Event-Driven**: Real-time updates and user interactions
+- **Responsive**: Mobile-first design approach
+- **Accessible**: WCAG 2.1 compliant
 
-- **Next.js 14**: React framework with app directory
-- **TypeScript**: Type-safe development
-- **Tailwind CSS**: Utility-first styling
-- **Web Audio API**: Real-time audio processing
-- **Canvas 2D**: Hardware-accelerated rendering
+### Adding New Visualizations
+1. Create visualization method in `visualizer.js`
+2. Add scene button to HTML
+3. Update scene selection logic
+4. Test with different audio types
 
-### Adding New Features
-
-The codebase is designed for extensibility. Examples:
-
-#### Add a New Visualization Scene
-
-```typescript
-// In visualization-renderer.ts
-private renderNewScene(analysis: AudioAnalysis): void {
-  // Your custom visualization logic
-}
-
-// Add to the render switch statement
-case 'newScene':
-  this.renderNewScene(analysis)
-  break
+### Custom Themes
+```javascript
+// Add to colorThemes object
+custom: ['#color1', '#color2', '#color3', '#color4']
 ```
 
-#### Add Custom Color Palettes
+## 📊 Analytics
 
-```typescript
-// In visualization-renderer.ts
-private palettes: ColorPalette[] = [
-  // ... existing palettes
-  {
-    id: 'custom',
-    name: 'Custom',
-    colors: ['#color1', '#color2', '#color3', '#color4'],
-  }
-]
-```
+### User Metrics
+- Video creation frequency
+- Feature usage patterns
+- Session duration
+- Conversion rates
 
-## 🎯 Performance Tips
+### Performance Metrics
+- Audio processing latency
+- Video export times
+- Memory usage
+- Error rates
 
-- Use lower FFT sizes for better performance on slower devices
-- Adjust smoothing for the right balance of responsiveness vs stability
-- The visualizer automatically optimizes canvas resolution based on device pixel ratio
+### Business Metrics
+- Subscription conversions
+- Churn rates
+- Revenue per user
+- Feature adoption
 
 ## 🤝 Contributing
 
+### Development Setup
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+2. Create feature branch
+3. Make changes
+4. Test thoroughly
+5. Submit pull request
+
+### Code Standards
+- Use ES6+ features
+- Follow consistent naming
+- Add comments for complex logic
+- Test across browsers
+
+### Testing
+- Audio functionality
+- Video export
+- Authentication flow
+- Mobile responsiveness
+- Performance benchmarks
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## 🆘 Support
 
-- Web Audio API documentation and community
-- Next.js team for the excellent framework
-- Tailwind CSS for the utility-first approach
-- The open-source community for inspiration and tools
+### Documentation
+- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [Supabase Docs](https://supabase.com/docs)
+- [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+
+### Community
+- GitHub Issues
+- Discord Server
+- Email Support
+
+### Troubleshooting
+
+#### Common Issues
+
+**Audio not playing:**
+- Check browser permissions
+- Verify audio file format
+- Ensure Web Audio API support
+
+**Video export fails:**
+- Check available memory
+- Verify browser compatibility
+- Try different resolution
+
+**MIDI not connecting:**
+- Check device permissions
+- Verify MIDI device drivers
+- Test with different browser
+
+**Authentication errors:**
+- Verify Supabase configuration
+- Check network connectivity
+- Clear browser cache
+
+## 🔮 Roadmap
+
+### Phase 1: Core Features ✅
+- [x] Basic audio visualization
+- [x] User authentication
+- [x] Video export
+- [x] MIDI support
+
+### Phase 2: Advanced Features 🚧
+- [ ] WebGL rendering
+- [ ] Custom shaders
+- [ ] 3D visualizations
+- [ ] AI-powered analysis
+
+### Phase 3: Collaboration
+- [ ] Real-time collaboration
+- [ ] Project sharing
+- [ ] Team workspaces
+- [ ] Version control
+
+### Phase 4: Enterprise
+- [ ] White-label solutions
+- [ ] API access
+- [ ] Custom integrations
+- [ ] Advanced analytics
+
+---
+
+**Built with ❤️ by EarGoo using Web Audio API, Canvas 2D, and Supabase**
