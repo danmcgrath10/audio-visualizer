@@ -1,6 +1,10 @@
-# 🎵 EarGoo
+# 🎵 Audio Visualizer
 
-A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management powered by Supabase.
+A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management. **Now open source!**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
 ## ✨ Features
 
@@ -33,7 +37,7 @@ A professional web-based audio visualizer with real-time frequency analysis, adv
 ### Prerequisites
 - Node.js 16+ (for local development)
 - Modern web browser with Web Audio API support
-- Supabase account (for backend services)
+- Supabase account (optional - for cloud features)
 
 ### 1. Clone the Repository
 ```bash
@@ -41,7 +45,9 @@ git clone <repository-url>
 cd eargoo
 ```
 
-### 2. Set Up Supabase
+### 2. Set Up Supabase (Optional - for Cloud Features)
+
+> **Note:** Supabase is optional for basic functionality. The visualizer works perfectly without it!
 
 #### Create a Supabase Project
 1. Go to [supabase.com](https://supabase.com) and create a new project
@@ -61,11 +67,11 @@ cd eargoo
 
 #### Google OAuth Setup (Optional)
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project named "EarGoo"
+2. Create a new project named "Audio Visualizer"
 3. Enable Google+ API
 4. Create OAuth 2.0 credentials:
    - Application type: Web application
-   - Name: "EarGoo Web"
+   - Name: "Audio Visualizer Web"
    - Authorized origins: `http://localhost:8000`, `https://yourdomain.com`
    - Redirect URI: `https://your-project.supabase.co/auth/v1/callback`
 5. Copy the Client ID to Supabase Google provider settings
@@ -78,9 +84,14 @@ cd eargoo
 Create a `.env.local` file in the root directory:
 
 ```bash
-# Supabase Configuration
+# Supabase Configuration (Optional)
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key-here
+
+# Feature Flags
+ENABLE_ANALYTICS=false
+ENABLE_ERROR_TRACKING=false
+ENABLE_CLOUD_FEATURES=false
 
 # Optional: Analytics and Monitoring
 # GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
@@ -95,7 +106,8 @@ Create an `env.json` file in the root directory:
   "SUPABASE_URL": "https://your-project.supabase.co",
   "SUPABASE_ANON_KEY": "your-anon-key-here",
   "ENABLE_ANALYTICS": "false",
-  "ENABLE_ERROR_TRACKING": "false"
+  "ENABLE_ERROR_TRACKING": "false",
+  "ENABLE_CLOUD_FEATURES": "false"
 }
 ```
 
@@ -109,37 +121,56 @@ supabase: {
 }
 ```
 
+**Option 4: No Configuration (Basic Mode)**
+For basic functionality without cloud features, you can run the application without any configuration!
+
 ### 4. Run the Application
 
-#### Option A: Simple HTTP Server
+#### Option A: Using npm scripts (Recommended)
+```bash
+npm run serve
+# or
+npm run serve-node
+```
+
+#### Option B: Simple HTTP Server
 ```bash
 python3 -m http.server 8000
 ```
 
-#### Option B: Node.js Development Server
+#### Option C: Node.js Development Server
 ```bash
 npm install -g live-server
 live-server --port=8000
 ```
 
-#### Option C: Python HTTP Server
+#### Option D: Next.js Development (for React version)
 ```bash
-python -m http.server 8000
+npm run dev
 ```
 
 ### 5. Access the Application
-Open your browser and navigate to `http://localhost:8000`
+Open your browser and navigate to:
+- Static version: `http://localhost:8000`
+- Next.js version: `http://localhost:3000`
 
 ## 📁 Project Structure
 
 ```
-eargoo/
-├── index.html              # Main application HTML
-├── visualizer.js           # Core visualization engine
-├── auth.js                 # Authentication service
-├── supabase-setup.sql      # Database schema and setup
-├── README.md              # This file
-└── backup/                # Original files (if any)
+audio-visualizer/
+├── src/                    # Next.js source files
+│   └── app/               # App router components
+├── index.html             # Main HTML file
+├── visualizer.js          # Core visualization engine
+├── auth.js                # Authentication service
+├── config.js              # Configuration
+├── supabase-setup.sql     # Database schema
+├── env.example.json       # Environment variables template
+├── README.md              # Project documentation
+├── CONTRIBUTING.md        # Contributing guidelines
+├── CODE_OF_CONDUCT.md     # Community guidelines
+├── DEPLOYMENT.md          # Deployment guide
+└── LICENSE                # MIT License
 ```
 
 ## 🔧 Configuration
@@ -161,32 +192,34 @@ eargoo/
 - **CC3**: Scene Selection
 - **CC4**: Color Theme
 
-## 💰 Subscription Tiers
+## 💰 Subscription Tiers (Future Cloud Hosting)
 
-### Free Tier
-- ✅ 3 videos per day
-- ✅ Basic visualizations
-- ✅ Watermark on exports
-- ✅ 720p resolution max
-- ✅ Community templates
-- ❌ MIDI controller support
+> **Note:** These tiers are planned for future cloud hosting. The open source version includes all features!
 
-### Pro Tier ($9.99/month)
-- ✅ Unlimited videos
+### Free Tier (Open Source)
 - ✅ All visualizations
 - ✅ No watermark
 - ✅ 4K resolution
 - ✅ Custom templates
+- ✅ MIDI controller support
+- ✅ Self-hosted
+- ✅ No limits
+
+### Pro Tier (Future Cloud - $9.99/month)
+- ✅ Everything in Free
+- ✅ Cloud hosting
+- ✅ Project saving
+- ✅ Team collaboration
 - ✅ Priority support
 - ✅ Advanced analytics
 
-### Enterprise Tier ($49.99/month)
+### Enterprise Tier (Future Cloud - $49.99/month)
 - ✅ Everything in Pro
-- ✅ Team collaboration
 - ✅ Custom branding
 - ✅ API access
 - ✅ Dedicated support
 - ✅ Usage analytics
+- ✅ White-label solutions
 
 ## 🎛️ Usage
 
@@ -235,19 +268,30 @@ eargoo/
 
 ## 🚀 Deployment
 
-### Vercel Deployment
-1. Install Vercel CLI: `npm i -g vercel`
-2. Deploy: `vercel --prod`
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-### Netlify Deployment
+### Quick Deploy Options
+
+**Vercel (Recommended for Next.js):**
+```bash
+npm i -g vercel
+vercel --prod
+```
+
+**Netlify:**
 1. Connect your GitHub repository
 2. Set build command: `echo "Static site"`
 3. Set publish directory: `.`
 
-### Custom Domain
-1. Configure DNS records
-2. Update Supabase site URL
-3. Set up SSL certificate
+**GitHub Pages:**
+1. Enable GitHub Pages in repository settings
+2. Deploy from main branch
+
+**Static Hosting:**
+```bash
+# Upload files to any web server
+# Configure for SPA routing
+```
 
 ### Environment Variables
 For production deployment, set these environment variables:
@@ -319,29 +363,75 @@ custom: ['#color1', '#color2', '#color3', '#color4']
 
 ## 🤝 Contributing
 
-### Development Setup
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Test thoroughly
-5. Submit pull request
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Quick Start for Contributors
+
+1. **Fork and clone:**
+   ```bash
+   git clone https://github.com/your-username/audio-visualizer.git
+   cd audio-visualizer
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development:**
+   ```bash
+   npm run serve
+   ```
+
+4. **Make changes and submit a PR!**
 
 ### Code Standards
 - Use ES6+ features
-- Follow consistent naming
+- Follow consistent naming conventions
 - Add comments for complex logic
 - Test across browsers
+- Follow our [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ### Testing
 - Audio functionality
 - Video export
-- Authentication flow
+- Authentication flow (if enabled)
 - Mobile responsiveness
 - Performance benchmarks
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🎯 Roadmap
+
+### Phase 1: Open Source Foundation ✅
+- [x] Core audio visualization engine
+- [x] Multiple visualization modes
+- [x] Video export functionality
+- [x] MIDI controller support
+- [x] Open source documentation
+- [x] Community guidelines
+
+### Phase 2: Enhanced Features 🚧
+- [ ] WebGL rendering
+- [ ] Custom shaders
+- [ ] 3D visualizations
+- [ ] AI-powered analysis
+- [ ] Plugin system
+
+### Phase 3: Cloud Hosting (Future)
+- [ ] User authentication
+- [ ] Project saving
+- [ ] Team collaboration
+- [ ] Subscription management
+- [ ] API access
+
+### Phase 4: Enterprise Features (Future)
+- [ ] White-label solutions
+- [ ] Custom integrations
+- [ ] Advanced analytics
+- [ ] Dedicated support
 
 ## 🆘 Support
 
@@ -407,4 +497,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ by EarGoo using Web Audio API, Canvas 2D, and Supabase**
+**Built with ❤️ by the Audio Visualizer community using Web Audio API, Canvas 2D, and modern web technologies**
+
+## 🙏 Acknowledgments
+
+- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) for audio processing
+- [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) for rendering
+- [Supabase](https://supabase.com) for backend services (optional)
+- [Next.js](https://nextjs.org) for the React framework
+- [Tailwind CSS](https://tailwindcss.com) for styling
+- All our contributors and the open source community!

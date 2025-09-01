@@ -1,12 +1,48 @@
 {
   "name": "audio-visualizer",
   "version": "0.1.0",
-  "private": true,
+  "description": "A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management",
+  "main": "index.html",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "serve": "python3 -m http.server 8000",
+    "serve-node": "npx live-server --port=8000",
+    "setup": "node scripts/setup.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "audio",
+    "visualizer",
+    "web-audio-api",
+    "canvas",
+    "frequency-analysis",
+    "real-time",
+    "visualization",
+    "music",
+    "supabase",
+    "react",
+    "nextjs",
+    "typescript"
+  ],
+  "author": {
+    "name": "Audio Visualizer Contributors",
+    "url": "https://github.com/your-username/audio-visualizer"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/audio-visualizer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/audio-visualizer/issues"
+  },
+  "homepage": "https://github.com/your-username/audio-visualizer#readme",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "next": "14.0.4",
@@ -23,5 +59,8 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4"
+  },
+  "optionalDependencies": {
+    "@supabase/supabase-js": "^2.0.0"
   }
 }
