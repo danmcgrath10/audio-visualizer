@@ -16,11 +16,11 @@ const config = {
     app: {
         name: (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_APP_NAME) ||
               (typeof window !== 'undefined' && window.env && window.env.NEXT_PUBLIC_APP_NAME) ||
-              'Audio Visualizer',
+              'EarGoo',
         version: (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_APP_VERSION) ||
                 (typeof window !== 'undefined' && window.env && window.env.NEXT_PUBLIC_APP_VERSION) ||
                 '0.1.0',
-        description: 'Professional Audio Visualization Studio - Open Source',
+        description: 'Professional Audio Visualization Studio',
         baseUrl: (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_BASE_URL) ||
                 (typeof window !== 'undefined' && window.env && window.env.NEXT_PUBLIC_BASE_URL) ||
                 'http://localhost:8000'
@@ -136,7 +136,7 @@ config.get = function(path, defaultValue = null) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = config;
 } else if (typeof window !== 'undefined') {
-    window.AudioVisualizerConfig = config;
+    window.EarGooConfig = config;
 }
 
 export default config;

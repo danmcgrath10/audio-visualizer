@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying Audio Visualizer to various hosting platforms, from simple static hosting to full cloud deployments.
+This guide covers deploying EarGoo to various hosting platforms, from simple static hosting to full cloud deployments.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ This guide covers deploying Audio Visualizer to various hosting platforms, from 
 
 ### Prerequisites
 
-- Git repository with your Audio Visualizer code
+- Git repository with your EarGoo code
 - Node.js 16+ (for build processes)
 - Modern web browser for testing
 
@@ -28,8 +28,8 @@ This guide covers deploying Audio Visualizer to various hosting platforms, from 
 
 1. **Clone and setup:**
    ```bash
-   git clone https://github.com/your-username/audio-visualizer.git
-   cd audio-visualizer
+   git clone https://github.com/your-username/eargoo.git
+   cd eargoo
    ```
 
 2. **Configure environment:**
@@ -111,7 +111,7 @@ Create `vercel.json` in your project root:
 ```json
 {
   "version": 2,
-  "name": "audio-visualizer",
+  "name": "eargoo",
   "builds": [
     {
       "src": "package.json",
@@ -125,7 +125,7 @@ Create `vercel.json` in your project root:
     }
   ],
   "env": {
-    "NEXT_PUBLIC_APP_NAME": "Audio Visualizer",
+    "NEXT_PUBLIC_APP_NAME": "EarGoo",
     "NEXT_PUBLIC_APP_VERSION": "0.1.0"
   }
 }

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Audio Visualizer Setup Script
+ * EarGoo Setup Script
  * 
- * This script helps users quickly set up the Audio Visualizer project
+ * This script helps users quickly set up the EarGoo project
  * for development or production use.
  */
 
@@ -54,7 +54,7 @@ function createEnvFile() {
     "ENABLE_MIDI_SUPPORT": "true",
     "ENABLE_VIDEO_EXPORT": "true",
     "ENABLE_CLOUD_FEATURES": "false",
-    "NEXT_PUBLIC_APP_NAME": "Audio Visualizer",
+    "NEXT_PUBLIC_APP_NAME": "EarGoo",
     "NEXT_PUBLIC_APP_VERSION": "0.1.0",
     "NEXT_PUBLIC_DEFAULT_THEME": "neon",
     "NEXT_PUBLIC_DEFAULT_FFT_SIZE": "512",
@@ -151,7 +151,7 @@ function showNextSteps() {
 }
 
 async function main() {
-  log('🎵 Audio Visualizer Setup', 'bright');
+      log('🎵 EarGoo Setup', 'bright');
   log('========================', 'bright');
   
   try {

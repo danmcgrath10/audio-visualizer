@@ -1,0 +1,612 @@
+
+> eargoo@0.1.0 dev
+> next dev
+
+   ▲ Next.js 14.0.4
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Ready in 1166ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1537ms (427 modules)
+ ✓ Compiled in 80ms (216 modules)
+ ✓ Compiled in 151ms (216 modules)
+ ✓ Compiled in 51ms (216 modules)
+ ✓ Compiled in 51ms (216 modules)
+ ✓ Compiled in 40ms (216 modules)
+ ✓ Compiled in 57ms (216 modules)
+ ✓ Compiled in 49ms (216 modules)
+ ✓ Compiled in 56ms (216 modules)
+ ✓ Compiled in 57ms (216 modules)
+ ✓ Compiled in 57ms (216 modules)
+ ✓ Compiled in 39ms (216 modules)
+ ✓ Compiled in 182ms (216 modules)
+ ✓ Compiled in 42ms (216 modules)
+ ✓ Compiled in 45ms (216 modules)
+ ✓ Compiled in 45ms (216 modules)
+ ✓ Compiled in 53ms (216 modules)
+ ✓ Compiled in 43ms (216 modules)
+ ✓ Compiled in 37ms (216 modules)
+ ✓ Compiled in 47ms (216 modules)
+ ✓ Compiled in 88ms (216 modules)
+ ✓ Compiled in 38ms (216 modules)
+ ✓ Compiled in 39ms (216 modules)
+ ✓ Compiled in 43ms (216 modules)
+ ✓ Compiled / in 382ms (450 modules)
+ ⨯ src/app/page.tsx (9:22) @ useKeyboardShortcuts
+ ⨯ TypeError: (0 , _hooks_use_keyboard_shortcuts__WEBPACK_IMPORTED_MODULE_6__.useKeyboardShortcuts) is not a function
+    at Home (./src/app/page.tsx:21:88)
+    at stringify (<anonymous>)
+[0m [90m  7 |[39m[0m
+[0m [90m  8 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mHome[39m() {[0m
+[0m[31m[1m>[22m[39m[90m  9 |[39m   useKeyboardShortcuts()[33m;[39m[0m
+[0m [90m    |[39m                      [31m[1m^[22m[39m[0m
+[0m [90m 10 |[39m   [0m
+[0m [90m 11 |[39m   [36mreturn[39m ([0m
+[0m [90m 12 |[39m     [33m<[39m[33mdiv[39m className[33m=[39m[32m"min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 text-white p-8"[39m[33m>[39m[0m
+ ⨯ src/app/page.tsx (9:22) @ useKeyboardShortcuts
+ ⨯ TypeError: (0 , _hooks_use_keyboard_shortcuts__WEBPACK_IMPORTED_MODULE_6__.useKeyboardShortcuts) is not a function
+    at Home (./src/app/page.tsx:21:88)
+    at stringify (<anonymous>)
+digest: "3924388094"
+[0m [90m  7 |[39m[0m
+[0m [90m  8 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mHome[39m() {[0m
+[0m[31m[1m>[22m[39m[90m  9 |[39m   useKeyboardShortcuts()[33m;[39m[0m
+[0m [90m    |[39m                      [31m[1m^[22m[39m[0m
+[0m [90m 10 |[39m   [0m
+[0m [90m 11 |[39m   [36mreturn[39m ([0m
+[0m [90m 12 |[39m     [33m<[39m[33mdiv[39m className[33m=[39m[32m"min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 text-white p-8"[39m[33m>[39m[0m
+ ✓ Compiled in 52ms (230 modules)
+ ✓ Compiled in 75ms (230 modules)
+ ✓ Compiled in 81ms (230 modules)
+ ✓ Compiled in 51ms (230 modules)
+ ✓ Compiled in 56ms (230 modules)
+ ✓ Compiled in 69ms (230 modules)
+ ✓ Compiled in 44ms (230 modules)
+ ✓ Compiled in 77ms (230 modules)
+ ✓ Compiled in 49ms (230 modules)
+ ✓ Compiled in 78ms (230 modules)
+ ✓ Compiled in 55ms (230 modules)
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ⨯ ./src/components/video-recorder.tsx
+Error: 
+  [31mx[0m the name `setRecordingProgress` is defined multiple times
+    ,-[[36;1;4m/Users/danielmcgrath/Development/audio-visualizer/src/components/video-recorder.tsx[0m:8:1]
+ [2m 8[0m |   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+ [2m 9[0m |   const chunksRef = useRef<Blob[]>([]);
+ [2m10[0m |   const [isRecording, setIsRecording] = useState(false);
+ [2m11[0m |   const [recordingProgress, setRecordingProgress] = useState(0);
+    : [31;1m                            ^^^^^^^^^^|^^^^^^^^^[0m
+    :                                       [31;1m`-- [31;1mprevious definition of `setRecordingProgress` here[0m[0m
+ [2m12[0m |   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+ [2m13[0m | 
+ [2m14[0m |   const {
+ [2m15[0m |     engine,
+ [2m16[0m |     visualizationMode,
+ [2m17[0m |     colorTheme,
+ [2m18[0m |     sensitivity,
+ [2m19[0m |     setRecording,
+ [2m20[0m |     setRecordingProgress,
+    : [33;1m    ^^^^^^^^^^|^^^^^^^^^[0m
+    :               [33;1m`-- [33;1m`setRecordingProgress` redefined here[0m[0m
+ [2m21[0m |   } = useAudioStore();
+ [2m22[0m | 
+ [2m23[0m |   const startRecording = async () => {
+    `----
+
+Import trace for requested module:
+./src/components/video-recorder.tsx
+./src/components/control-panel.tsx
+ ✓ Compiled in 263ms (233 modules)
+ ✓ Compiled in 55ms (233 modules)
+ ✓ Compiled in 36ms (233 modules)
+ ✓ Compiled in 56ms (233 modules)
+ ✓ Compiled in 49ms (233 modules)
+ ✓ Compiled in 108ms (233 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/danielmcgrath/Development/audio-visualizer/.next/cache/webpack/client-development/2.pack.gz_' -> '/Users/danielmcgrath/Development/audio-visualizer/.next/cache/webpack/client-development/2.pack.gz'
+ ✓ Compiled in 73ms (233 modules)
+ ✓ Compiled in 94ms (233 modules)
+ ✓ Compiled in 73ms (233 modules)
+ ✓ Compiled in 45ms (233 modules)
+ ✓ Compiled in 62ms (233 modules)
+ ✓ Compiled in 53ms (233 modules)
+ ✓ Compiled in 53ms (233 modules)
+ ✓ Compiled in 52ms (233 modules)
+ ✓ Compiled in 94ms (233 modules)
+ ✓ Compiled in 48ms (233 modules)
+ ✓ Compiled in 33ms (233 modules)
+ ✓ Compiled in 56ms (233 modules)
+ ✓ Compiled / in 271ms (442 modules)
+ ✓ Compiled /not-found in 59ms (447 modules)

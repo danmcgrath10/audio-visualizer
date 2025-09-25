@@ -1,6 +1,6 @@
-# Contributing to Audio Visualizer
+# Contributing to EarGoo
 
-Thank you for your interest in contributing to Audio Visualizer! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to EarGoo! This document provides guidelines and information for contributors.
 
 ## Table of Contents
 
@@ -32,12 +32,12 @@ This project and everyone participating in it is governed by our [Code of Conduc
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/your-username/audio-visualizer.git
-   cd audio-visualizer
+   git clone https://github.com/your-username/eargoo.git
+   cd eargoo
    ```
-3. Add the upstream repository:
+  3. Add the upstream repository:
    ```bash
-   git remote add upstream https://github.com/original-owner/audio-visualizer.git
+   git remote add upstream https://github.com/original-owner/eargoo.git
    ```
 
 ## Development Setup
@@ -261,4 +261,4 @@ Contributors will be recognized in:
 - Release notes
 - GitHub contributors page
 
-Thank you for contributing to Audio Visualizer! 🎵
+Thank you for contributing to EarGoo! 🎵

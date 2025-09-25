@@ -23,8 +23,8 @@ class AuthService {
 
     getConfig() {
         // Try to get config from different sources
-        if (typeof window !== 'undefined' && window.AudioVisualizerConfig) {
-            return window.AudioVisualizerConfig;
+        if (typeof window !== 'undefined' && window.EarGooConfig) {
+            return window.EarGooConfig;
         }
         
         // Try to import config module
@@ -43,7 +43,7 @@ class AuthService {
                 anonKey: 'your-anon-key-here'
             },
             app: {
-                name: 'Audio Visualizer',
+                name: 'EarGoo',
                 version: '0.1.0'
             },
             features: {

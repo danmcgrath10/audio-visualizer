@@ -1,5 +1,5 @@
 {
-  "name": "audio-visualizer",
+  "name": "eargoo",
   "version": "0.1.0",
   "description": "A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management",
   "main": "index.html",
@@ -28,39 +28,41 @@
     "typescript"
   ],
   "author": {
-    "name": "Audio Visualizer Contributors",
+    "name": "EarGoo Contributors",
     "url": "https://github.com/your-username/audio-visualizer"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/audio-visualizer.git"
+    "url": "https://github.com/your-username/eargoo.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/audio-visualizer/issues"
+    "url": "https://github.com/your-username/eargoo/issues"
   },
-  "homepage": "https://github.com/your-username/audio-visualizer#readme",
+  "homepage": "https://github.com/your-username/eargoo#readme",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "typescript": "^5",
-    "tailwindcss": "^3.3.0",
-    "postcss": "^8",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.0.4"
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
   },
   "optionalDependencies": {
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.57.4"
   }
 }

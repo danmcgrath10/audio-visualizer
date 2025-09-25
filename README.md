@@ -1,4 +1,4 @@
-# 🎵 Audio Visualizer
+# 🎵 EarGoo
 
 A professional web-based audio visualizer with real-time frequency analysis, advanced visualizations, and cloud-based user management. **Now open source!**
 
@@ -67,11 +67,11 @@ cd eargoo
 
 #### Google OAuth Setup (Optional)
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project named "Audio Visualizer"
+2. Create a new project named "EarGoo"
 3. Enable Google+ API
 4. Create OAuth 2.0 credentials:
    - Application type: Web application
-   - Name: "Audio Visualizer Web"
+   - Name: "EarGoo Web"
    - Authorized origins: `http://localhost:8000`, `https://yourdomain.com`
    - Redirect URI: `https://your-project.supabase.co/auth/v1/callback`
 5. Copy the Client ID to Supabase Google provider settings
@@ -157,7 +157,7 @@ Open your browser and navigate to:
 ## 📁 Project Structure
 
 ```
-audio-visualizer/
+eargoo/
 ├── src/                    # Next.js source files
 │   └── app/               # App router components
 ├── index.html             # Main HTML file
@@ -497,7 +497,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by the Audio Visualizer community using Web Audio API, Canvas 2D, and modern web technologies**
+**Built with ❤️ by EarGoo using Web Audio API, Canvas 2D, and modern web technologies**
 
 ## 🙏 Acknowledgments
 
